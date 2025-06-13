@@ -9,20 +9,27 @@ class Plan extends Model
 {
     use HasFactory;
 
+    protected $table = 'planes';
+
     protected $fillable = [
         'nombre_plan',
-        'descripcion',
         'duracion_meses',
-        'cuotas',
-        'valor_cuota',
-        'valor_total',
-        'clases_por_semana',
-        'dias',
-        'observaciones',
+        'monto_total',
+        'monto_base_mensual',
+        'pago_inicial',
+        'tipo_plan_pago',
+        'cant_clases_tradicional',
+        'cant_clases_sanda',
+        'cant_clases_extra',
     ];
 
     public function alumnos()
     {
         return $this->belongsToMany(Alumno::class, 'alumno_plan')->withTimestamps();
     }
-} 
+
+    public function alumnoPlanes()
+    {
+        return $this->hasMany(AlumnoPlan::class);
+    }
+}

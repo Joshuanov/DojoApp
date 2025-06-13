@@ -22,9 +22,14 @@ class PlanController extends Controller
     {
         $request->validate([
             'nombre_plan' => 'required|string',
-            'descripcion' => 'nullable|string',
             'duracion_meses' => 'required|integer',
-            'valor_total' => 'required|integer',
+            'monto_total' => 'required|integer',
+            'monto_base_mensual' => 'required|integer',
+            'pago_inicial' => 'required|integer',
+            'tipo_plan_pago' => 'required|string',
+            'cant_clases_tradicional' => 'required|integer',
+            'cant_clases_sanda' => 'required|integer',
+            'cant_clases_extra' => 'required|integer',
         ]);
 
         Plan::create($request->all());
@@ -46,9 +51,14 @@ class PlanController extends Controller
     {
         $request->validate([
             'nombre_plan' => 'required|string',
-            'descripcion' => 'nullable|string',
             'duracion_meses' => 'required|integer',
-            'valor_total' => 'required|integer',
+            'monto_total' => 'required|integer',
+            'monto_base_mensual' => 'required|integer',
+            'pago_inicial' => 'required|integer',
+            'tipo_plan_pago' => 'required|string',
+            'cant_clases_tradicional' => 'required|integer',
+            'cant_clases_sanda' => 'required|integer',
+            'cant_clases_extra' => 'required|integer',
         ]);
 
         $plan->update($request->all());
