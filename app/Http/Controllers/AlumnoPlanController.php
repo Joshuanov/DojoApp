@@ -9,17 +9,38 @@ use Illuminate\Http\Request;
 
 class AlumnoPlanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $alumnosPlanes = AlumnoPlan::with(['alumno', 'plan'])->paginate(10);
-        return view('alumno_plan.index', compact('alumnosPlanes'));
+        $query = AlumnoPlan::with('alumno', 'plan'); // Asegúrate de tener estas relaciones definidas en el modelo
+
+        if ($request->filled('busqueda')) {
+            $query->whereHas('alumno', function ($q) use ($request) {
+                $q->where('nombre_alumno', 'like', '%' . $request->busqueda . '%')
+                    ->orWhere('apellido_paterno', 'like', '%' . $request->busqueda . '%')
+                    ->orWhere('apellido_materno', 'like', '%' . $request->busqueda . '%');
+            })->orWhereHas('plan', function ($q) use ($request) {
+                $q->where('nombre_plan', 'like', '%' . $request->busqueda . '%');
+            })->orWhere('estado', 'like', '%' . $request->busqueda . '%')
+                ->orWhere('fecha_inicio', 'like', '%' . $request->busqueda . '%')
+                ->orWhere('fecha_fin_real', 'like', '%' . $request->busqueda . '%');
+        }
+
+        $alumnoPlanes = $query->paginate(10);
+
+        return view('alumno_plan.index', ['alumnosPlanes' => $alumnoPlanes]);
     }
+
+
 
     public function create()
     {
-        $alumnos = Alumno::all();
-        $planes = Plan::all();
-        return view('alumno_plan.create', compact('alumnos', 'planes'));
+        $alumnos = Alumno::select('id', 'nombre_alumno', 'apellido_paterno', 'apellido_materno')->get();
+        $planes = Plan::select('id', 'nombre_plan')->get();
+
+        return view('alumno_plan.create', [
+            'alumnos' => $alumnos,
+            'planes' => $planes
+        ]);
     }
 
     public function store(Request $request)
@@ -50,7 +71,8 @@ class AlumnoPlanController extends Controller
 
     public function edit(AlumnoPlan $alumnoPlan)
     {
-        $alumnos = Alumno::all();
+        $alumnos = Alumno::whereHas('planes')->get(); // o el nombre real de la relación
+
         $planes = Plan::all();
         return view('alumno_plan.edit', compact('alumnoPlan', 'alumnos', 'planes'));
     }

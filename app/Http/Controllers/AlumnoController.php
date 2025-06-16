@@ -7,11 +7,21 @@ use Illuminate\Http\Request;
 
 class AlumnoController extends Controller
 {
-    public function index()
-    {
-        $alumnos = Alumno::all();
-        return view('alumnos.index', compact('alumnos'));
+  public function index(Request $request)
+{
+    $query = Alumno::query();
+
+    if ($request->filled('busqueda')) {
+        $query->where('nombre_alumno', 'like', '%' . $request->busqueda . '%')
+              ->orWhere('apellido_paterno', 'like', '%' . $request->busqueda . '%')
+              ->orWhere('apellido_materno', 'like', '%' . $request->busqueda . '%');
     }
+
+    $alumnos = $query->paginate(10);
+
+    return view('alumnos.index', compact('alumnos'));
+}
+
 
     public function create()
     {

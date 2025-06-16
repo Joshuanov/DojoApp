@@ -7,11 +7,19 @@ use Illuminate\Http\Request;
 
 class PlanController extends Controller
 {
-    public function index()
-    {
-        $planes = Plan::all();
-        return view('planes.index', compact('planes'));
+  public function index(Request $request)
+{
+    $query = Plan::query();
+
+    if ($request->filled('busqueda')) {
+        $query->where('nombre_plan', 'like', '%' . $request->busqueda . '%');
     }
+
+    $planes = $query->paginate(10);
+
+    return view('planes.index', compact('planes'));
+}
+
 
     public function create()
     {

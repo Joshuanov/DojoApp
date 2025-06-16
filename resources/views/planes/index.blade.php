@@ -18,13 +18,23 @@
             </div>
         @endif
 
+        <form method="GET" class="mb-4">
+            <input type="text" name="busqueda" value="{{ request('busqueda') }}" placeholder="Buscar..."
+                class="border border-gray-300 rounded-md px-4 py-2 w-full md:w-1/3">
+            <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                Buscar
+            </button>
+        </form>
+
+
         <div class="overflow-x-auto">
             <table class="min-w-full bg-white border border-gray-200 rounded shadow-sm text-sm">
                 <thead>
                     <tr class="bg-gray-100 text-left">
-                        <th class="px-4 py-2">Nombre</th>
+                        <th class="px-4 py-2">Nombre Plan</th>
                         <th class="px-4 py-2">Duración (meses)</th>
                         <th class="px-4 py-2">Monto Total</th>
+                        <th class="px-4 py-2">Monto Base Mensual</th>
                         <th class="px-4 py-2">Pago Inicial</th>
                         <th class="px-4 py-2">Tipo de Pago</th>
                         <th class="px-4 py-2">Clases Tradicional</th>
@@ -39,6 +49,7 @@
                             <td class="px-4 py-2">{{ $plan->nombre_plan }}</td>
                             <td class="px-4 py-2">{{ $plan->duracion_meses }}</td>
                             <td class="px-4 py-2">{{ $plan->monto_total }}</td>
+                            <td class="px-4 py-2">{{ $plan->monto_base_mensual }}</td>
                             <td class="px-4 py-2">{{ $plan->pago_inicial }}</td>
                             <td class="px-4 py-2">{{ $plan->tipo_plan_pago }}</td>
                             <td class="px-4 py-2">{{ $plan->cant_clases_tradicional }}</td>
@@ -48,7 +59,8 @@
                                 <a href="{{ route('planes.edit', $plan) }}">
                                     <x-secondary-button>Editar</x-secondary-button>
                                 </a>
-                                <form action="{{ route('planes.destroy', $plan) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este plan?');">
+                                <form action="{{ route('planes.destroy', $plan) }}" method="POST"
+                                    onsubmit="return confirm('¿Estás seguro de eliminar este plan?');">
                                     @csrf
                                     @method('DELETE')
                                     <x-danger-button>Eliminar</x-danger-button>

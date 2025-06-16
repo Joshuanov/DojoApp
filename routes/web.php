@@ -35,10 +35,10 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('alumnos', AlumnoController::class);
     Route::resource('planes', PlanController::class)->parameters(['planes' => 'plan']);
-    Route::resource('alumno-plan', AlumnoPlanController::class);
+    Route::resource('alumno_plan', AlumnoPlanController::class);
     Route::resource('asistencias', AsistenciaController::class);
     Route::resource('mensualidades', MensualidadController::class);
-    Route::resource('tipo-clase', TipoClaseController::class);
+    Route::resource('tipo_clase', TipoClaseController::class);
 });
 
 require __DIR__.'/auth.php';
