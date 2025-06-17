@@ -3,6 +3,7 @@
         <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Listado de Alumnos</h2>
     </x-slot>
 
+    <!--BOTON CREAR NUEVO ALUMNO-->
     <div class="py-4 px-6">
         <a href="{{ route('alumnos.create') }}"
             class="mb-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Nuevo Alumno</a>
@@ -14,6 +15,7 @@
                 Buscar
             </button>
         </form>
+
 
         <table class="min-w-full bg-white shadow rounded">
             <thead>
@@ -32,9 +34,9 @@
                         <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }}
                             {{ $alumno->apellido_materno }}</td>
                         <td class="border px-4 py-2">{{ $alumno->rut }}</td>
-                        <td class="border px-4 py-2">{{ $alumno->nivel }}</td>
-                        <td class="border px-4 py-2">{{ $alumno->grado }}</td>
-                        <td class="border px-4 py-2">{{ $alumno->estado }}</td>
+                        <td class="border px-4 py-2">{{ $alumno->nivel_nombre }}</td>
+                        <td class="border px-4 py-2">{{ $alumno->grado_nombre }}</td>
+                        <td class="border px-4 py-2">{{ $alumno->estado_nombre}}</td>
                         <td class="px-4 py-2 flex space-x-2">
                             <a href="{{ route('alumnos.edit', $alumno) }}">
                                 <x-secondary-button>Editar</x-secondary-button>
@@ -47,6 +49,10 @@
                             </form>
                         </td>
                     </tr>
+
+            
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>

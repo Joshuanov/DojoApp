@@ -4,10 +4,13 @@
     </x-slot>
 
     <div class="py-4 px-6 space-y-4">
+        <!--FORMULARIO-->
         <form action="{{ route('alumnos.store') }}" method="POST">
             @csrf
             @include('alumnos.partials.form', ['alumno' => null])
+
             <div class="flex gap-2 ml-6">
+                
                 <x-primary-button>Guardar</x-primary-button>
 
                 <a href="{{ route('alumnos.index') }}">
