@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-     return redirect()->route('login');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -33,6 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/asistencias/masiva', [AsistenciaController::class, 'vistaMasiva'])->name('asistencias.masiva');
+    Route::post('/asistencias/masiva', [AsistenciaController::class, 'guardarMasiva'])->name('asistencias.masiva.store');
+
     Route::resource('alumnos', AlumnoController::class);
     Route::resource('planes', PlanController::class)->parameters(['planes' => 'plan']);
     Route::resource('alumno_plan', AlumnoPlanController::class);
@@ -41,4 +44,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('tipo_clase', TipoClaseController::class);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

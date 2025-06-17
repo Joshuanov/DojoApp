@@ -19,8 +19,12 @@ class AsistenciaController extends Controller
     {
         $alumnos = Alumno::all();
         $tiposClase = TipoClase::all();
-        return view('asistencias.create', compact('alumnos', 'tiposClase'));
+        $grupos = TipoClase::select('grupo')->distinct()->pluck('grupo');
+
+        return view('asistencias.create', compact('alumnos', 'tiposClase', 'grupos'));
     }
+
+
 
     public function store(Request $request)
     {
@@ -71,5 +75,41 @@ class AsistenciaController extends Controller
         $asistencia->delete();
 
         return redirect()->route('asistencias.index')->with('success', 'Asistencia eliminada correctamente.');
+    }
+
+    public function vistaMasiva()
+    {
+        $alumnos = Alumno::with(['asistencias.tipoClase'])->get();
+
+        $tiposClase = TipoClase::all(); // para el formulario
+
+        return view('asistencias.masiva', compact('alumnos', 'tiposClase'));
+    }
+
+    public function guardarMasiva(Request $request)
+    {
+        $request->validate([
+            'tipo_clase_id' => 'required|exists:tipo_clase,id',
+            'fecha' => 'required|date',
+            'asistencias' => 'array',
+        ]);
+
+        foreach ($request->asistencias ?? [] as $alumnoId => $estado) {
+            $existe = Asistencia::where('alumno_id', $alumnoId)
+                ->where('fecha', $request->fecha)
+                ->exists();
+
+            if (!$existe) {
+                Asistencia::create([
+                    'alumno_id' => $alumnoId,
+                    'tipo_clase_id' => $request->tipo_clase_id,
+                    'fecha' => $request->fecha,
+                    'estado' => $estado,
+                    'es_recuperacion' => false,
+                ]);
+            }
+        }
+
+        return redirect()->route('asistencias.index')->with('success', 'Asistencias masivas registradas correctamente.');
     }
 }
