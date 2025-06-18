@@ -32,7 +32,8 @@
         </div>
 
         <!--LISTA NIVELES-->
-        <x-select name="nivel" label="Nivel" :options="[
+         <div>
+            <x-select name="nivel" label="Nivel" :options="[
             '' => 'Selecciona un nivel',
             'junior' =>'Junior', 
             'basico' => 'Básico', 
@@ -41,9 +42,12 @@
             'faja_negra' => 'Faja Negra', 
             'sanda' => 'Sanda']"
         :selected="old('nivel', $alumno->nivel ?? '')" />
+         </div>
+        
 
         <!--LISTA GRADOS-->
-        <x-select name="grado" label="Grado" :options="[
+         <div>
+            <x-select name="grado" label="Grado" :options="[
             '' => 'Selecciona un grado',
             'tiger_blanco' => 'Tiger Blanco', 
             'tiger_amarillo' => 'Tiger Amarillo', 
@@ -75,6 +79,8 @@
             'negro_II' => 'Negro II', 
             'negro_III' => 'Negro III']" 
         :selected="old('grado', $alumno->grado ?? '')" />
+         </div>
+        
 
         <!--ESTADO-->
         <div>
@@ -84,17 +90,19 @@
                 'congelado' => 'Congelado', 
                 'baja' => 'Baja']"
             :selected="old('estado',$alumno->estado ?? '')">
-
             </x-select>
+        </div>
 
         <!--CONTACTO-->
         <div class="col-span-2">
             <x-input-label value="Contacto" for="contacto" />
             <x-text-input type="text" name="contacto" :value="old('contacto', $alumno->contacto ?? '')" />
         </div>
+        
+       
 
         <!--COMENTARIOS-->
-        <div class="col-span-">
+        <div>
             <x-input-label value="Comentario" for="comentario" />
             <textarea name="comentario" rows="3" class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
         </div>
