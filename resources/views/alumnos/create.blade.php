@@ -7,7 +7,7 @@
         <!--FORMULARIO-->
         <form action="{{ route('alumnos.store') }}" method="POST">
             @csrf
-            @include('alumnos.partials.form', ['alumno' => null])
+            @include('alumnos.partials.form', ['alumno' => null, 'planes'=> $planes])
 
             <div class="flex gap-2 ml-6">
                 

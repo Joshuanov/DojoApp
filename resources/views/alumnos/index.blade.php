@@ -21,7 +21,7 @@
             <thead>
                 <tr class="bg-gray-200">
                     <th class="px-4 py-2">Nombre</th>
-                    <th class="px-4 py-2">RUT</th>
+                    <th class="px-4 py-2">Plan</th>
                     <th class="px-4 py-2">Nivel</th>
                     <th class="px-4 py-2">Grado</th>
                     <th class="px-4 py-2">Estado</th>
@@ -33,7 +33,7 @@
                     <tr>
                         <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }}
                             {{ $alumno->apellido_materno }}</td>
-                        <td class="border px-4 py-2">{{ $alumno->rut }}</td>
+                        <td class="border px-4 py-2">{{ $alumno->alumnoPlan->plan->nombre_plan ?? 'Sin plan asignado' }}</td>
                         <td class="border px-4 py-2">{{ $alumno->nivel_nombre }}</td>
                         <td class="border px-4 py-2">{{ $alumno->grado_nombre }}</td>
                         <td class="border px-4 py-2">{{ $alumno->estado_nombre}}</td>
@@ -49,8 +49,6 @@
                             </form>
                         </td>
                     </tr>
-
-
             
                     </td>
                 </tr>

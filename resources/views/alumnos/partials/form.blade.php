@@ -25,6 +25,12 @@
             <x-text-input type="number" name="edad" :value="old('edad', $alumno->edad ?? '')" required />
         </div>
 
+         <!--CONTACTO-->
+        <div>
+            <x-input-label value="Contacto" for="contacto" />
+            <x-text-input type="text" name="contacto" :value="old('contacto', $alumno->contacto ?? '')" />
+        </div>
+
         <!--RUT-->
         <div>
             <x-input-label value="RUT" for="rut" />
@@ -93,13 +99,13 @@
             </x-select>
         </div>
 
-        <!--CONTACTO-->
-        <div class="col-span-2">
-            <x-input-label value="Contacto" for="contacto" />
-            <x-text-input type="text" name="contacto" :value="old('contacto', $alumno->contacto ?? '')" />
+        <!--PLAN-->
+        <!--Se crea un arreglo nombre_plan - id para las opciones-->
+       <div>
+            <x-select name="plan_id" label="Plan" :options="$planes->pluck('nombre_plan', 'id')->prepend('Selecciona un plan', '')"
+            :selected="old('plan_id', optional($alumno?->alumnoPlan)->plan_id)">
+            </x-select>
         </div>
-        
-       
 
         <!--COMENTARIOS-->
         <div>

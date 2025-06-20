@@ -12,8 +12,8 @@ class AlumnoPlan extends Model
     protected $table = 'alumno_plan';
 
     protected $fillable = [
-        'alumno_id',
-        'plan_id',
+        'alumno_id', //belongsTo
+        'plan_id', //belongsTo
         'fecha_inicio',
         'duracion_meses',
         'estado',
@@ -26,11 +26,13 @@ class AlumnoPlan extends Model
     ];
 
 
+    // AlumnoPlan contiene clave foranea de Alumno
     public function alumno()
     {
         return $this->belongsTo(Alumno::class);
     }
 
+    // AlumnoPlan contiene clave foranea de Plan
     public function plan()
     {
         return $this->belongsTo(Plan::class);

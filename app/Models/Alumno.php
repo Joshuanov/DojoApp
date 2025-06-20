@@ -22,10 +22,10 @@ class Alumno extends Model
         'comentario',
     ];
 
-    // Un alumno puede tener muchos planes (relación muchos a muchos)
-    public function planes()
+    // Un alumno tiene solo un plan personalizado (relación muchos a uno
+    public function alumnoPlan()
     {
-        return $this->belongsToMany(Plan::class, 'alumno_plan')->withTimestamps();
+        return $this->hasOne(AlumnoPlan::class);
     }
 
     // Un alumno puede tener muchas asistencias
