@@ -39,14 +39,17 @@ class MensualidadController extends Controller
 
     public function show(Mensualidad $mensualidad)
     {
-        return view('mensualidades.show', compact('mensualidad'));
+        return redirect()->route('mensualidades.index');
     }
 
     public function edit(Mensualidad $mensualidad)
     {
-        $alumnoPlanes = AlumnoPlan::with('alumno')->get();
+
+
+        $alumnoPlanes = AlumnoPlan::with('alumno', 'plan')->get();
         return view('mensualidades.edit', compact('mensualidad', 'alumnoPlanes'));
     }
+
 
     public function update(Request $request, Mensualidad $mensualidad)
     {

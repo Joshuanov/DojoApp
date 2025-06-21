@@ -8,12 +8,13 @@
             @csrf
             @include('alumnos.partials.form', ['alumno' => null])
             <div class="flex gap-2 ml-6">
-                <x-primary-button>Guardar</x-primary-button>
+                <x-primary-button type="submit">Guardar</x-primary-button>
+
 
                 <a href="{{ route('alumnos.index') }}">
                     <x-secondary-button color="canary" class="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 me-2" fill="none" viewBox="0 0 24 24"
-                             stroke="currentColor" stroke-width="3">
+                            stroke="currentColor" stroke-width="3">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
                         Volver al listado
@@ -21,5 +22,17 @@
                 </a>
             </div>
         </form>
+        @if ($errors->any())
+            <div class="mb-4 p-4 bg-red-100 text-red-800 border border-red-300 rounded">
+                <strong>Corrige los siguientes errores:</strong>
+                <ul class="mt-2 list-disc list-inside text-sm">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+
     </div>
 </x-app-layout>

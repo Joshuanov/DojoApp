@@ -20,6 +20,50 @@
             </a>
         </div>
 
+        <form method="GET" class="mb-6 flex flex-wrap items-end gap-4">
+            {{-- Filtro por nombre de alumno --}}
+            <div>
+                <label for="alumno" class="block text-sm font-medium text-gray-700">Alumno</label>
+                <input type="text" name="alumno" id="alumno" value="{{ request('alumno') }}"
+                    class="mt-1 block w-full border-gray-300 rounded shadow-sm" placeholder="Nombre del alumno">
+            </div>
+
+            {{-- Filtro por tipo de clase --}}
+            <div>
+                <label for="tipo_clase" class="block text-sm font-medium text-gray-700">Tipo de Clase</label>
+                <select name="tipo_clase" id="tipo_clase" class="mt-1 block w-full border-gray-300 rounded shadow-sm">
+                    <option value="">-- Todas --</option>
+                    @foreach ($tiposClase as $tipo)
+                        <option value="{{ $tipo->id }}" @selected(request('tipo_clase') == $tipo->id)>
+                            {{ $tipo->nombre_clase }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Filtro por fecha desde --}}
+            <div>
+                <label for="fecha_desde" class="block text-sm font-medium text-gray-700">Desde</label>
+                <input type="date" name="fecha_desde" id="fecha_desde" value="{{ request('fecha_desde') }}"
+                    class="mt-1 block w-full border-gray-300 rounded shadow-sm">
+            </div>
+
+            {{-- Filtro por fecha hasta --}}
+            <div>
+                <label for="fecha_hasta" class="block text-sm font-medium text-gray-700">Hasta</label>
+                <input type="date" name="fecha_hasta" id="fecha_hasta" value="{{ request('fecha_hasta') }}"
+                    class="mt-1 block w-full border-gray-300 rounded shadow-sm">
+            </div>
+
+            <div>
+                <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mt-6">
+                    Filtrar
+                </button>
+            </div>
+        </form>
+
+
         <div class="bg-white shadow-sm rounded border border-gray-200 overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-100 text-left text-sm text-gray-700">
@@ -72,9 +116,14 @@
             </table>
         </div>
 
-        <div class="mt-4">
-            {{ $asistencias->links() }}
-        </div>
+        @if ($asistencias->hasPages())
+            <div class="mt-4">
+                {{ $asistencias->links() }}
+            </div>
+        @else
+            <p class="text-sm text-gray-500 mt-4">No hay suficientes resultados para paginar.</p>
+        @endif
+
         <div class="mb-4">
             <a href="{{ route('asistencias.masiva') }}"
                 class="inline-block px-4 py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition">

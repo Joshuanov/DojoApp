@@ -36,12 +36,12 @@
                 <!-- Campos adicionales -->
                 <div>
                     <x-input-label for="fecha_inicio" value="Fecha de Inicio" />
-                    <x-text-input type="date" name="fecha_inicio" value="{{ $alumnoPlan->fecha_inicio }}" required />
+                    <x-text-input type="date" name="fecha_inicio" id="fecha_inicio" value="{{ $alumnoPlan->fecha_inicio }}" required />
                 </div>
 
                 <div>
                     <x-input-label for="duracion_meses" value="Duración (meses)" />
-                    <x-text-input type="number" name="duracion_meses" value="{{ $alumnoPlan->duracion_meses }}" required />
+                    <x-text-input type="number" name="duracion_meses" id="duracion_meses" value="{{ $alumnoPlan->duracion_meses }}" required />
                 </div>
 
                 <div>
@@ -70,9 +70,13 @@
                 </div>
 
                 <div>
-                    <x-input-label for="fecha_fin_real" value="Fecha Fin Real" />
-                    <x-text-input type="date" name="fecha_fin_real" value="{{ $alumnoPlan->fecha_fin_real }}" required />
+                    <x-input-label for="fecha_fin_real_mostrar" value="Fecha Fin Real (calculada automáticamente)" />
+                    <x-text-input type="text" id="fecha_fin_real_mostrar" class="bg-gray-100" readonly />
                 </div>
+
+                  {{-- Campo oculto para enviar al backend --}}
+                <input type="hidden" name="fecha_fin_real" id="fecha_fin_real"
+                    value="{{ $alumnoPlan->fecha_fin_real }}">
             </div>
 
             <!-- Observaciones -->

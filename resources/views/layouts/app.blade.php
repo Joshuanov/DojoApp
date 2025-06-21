@@ -19,7 +19,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
-   
+
 
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -36,7 +36,7 @@
         <!-- Page Heading -->
         @if (isset($header))
             <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
             </header>
@@ -55,6 +55,81 @@
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rutInput = document.getElementById('rut');
+
+            function limpiarRut(rut) {
+                return rut.replace(/[^\dkK]/g, '').toUpperCase();
+            }
+
+            function formatearRut(rut) {
+                rut = limpiarRut(rut);
+                if (rut.length < 2) return rut;
+                let cuerpo = rut.slice(0, -1);
+                let dv = rut.slice(-1);
+                return `${cuerpo}-${dv}`;
+            }
+
+            rutInput.addEventListener('input', () => {
+                const pos = rutInput.selectionStart;
+                const largoAntes = rutInput.value.length;
+
+                rutInput.value = formatearRut(rutInput.value);
+
+                const largoDespues = rutInput.value.length;
+                rutInput.selectionStart = rutInput.selectionEnd = pos + (largoDespues - largoAntes);
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#select-alumno-plan').select2({
+                placeholder: "Seleccione un alumno",
+                width: '100%'
+            });
+        });
+    </script>
+
+    {{-- Script para calcular fecha fin real --}}
+    <script>
+        function calcularFechaFin() {
+            const inicio = document.getElementById('fecha_inicio').value;
+            const meses = parseInt(document.getElementById('duracion_meses').value);
+
+            if (inicio && !isNaN(meses)) {
+                const fecha = new Date(inicio);
+                fecha.setMonth(fecha.getMonth() + meses);
+
+                const iso = fecha.toISOString().split('T')[0];
+                document.getElementById('fecha_fin_real').value = iso;
+                document.getElementById('fecha_fin_real_hidden').value = iso;
+            } else {
+                document.getElementById('fecha_fin_real').value = '';
+                document.getElementById('fecha_fin_real_hidden').value = '';
+            }
+        }
+
+        document.getElementById('fecha_inicio').addEventListener('change', calcularFechaFin);
+        document.getElementById('duracion_meses').addEventListener('input', calcularFechaFin);
+
+        window.addEventListener('DOMContentLoaded', calcularFechaFin);
+    </script>
+
+    {{-- Select2 --}}
+    <script>
+        $(document).ready(function() {
+            $('#alumno_id').select2({
+                placeholder: 'Selecciona un alumno',
+                width: '100%'
+            });
+            $('#plan_id').select2({
+                placeholder: 'Selecciona un plan',
+                width: '100%'
+            });
+        });
+    </script>
 
 </body>
 

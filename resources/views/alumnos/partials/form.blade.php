@@ -20,9 +20,12 @@
         </div>
 
         <div>
-            <x-input-label value="RUT" for="rut" />
-            <x-text-input type="text" name="rut" :value="old('rut', $alumno->rut ?? '')" required />
+            <x-input-label for="rut" value="RUT" />
+            <x-text-input id="rut" name="rut" type="text" :value="old('rut', $alumno->rut ?? '')" required
+                placeholder="Ej: 12345678-9" pattern="^\d{7,8}-[0-9kK]{1}$"
+                title="Ingrese un RUT válido sin puntos, con guion y dígito verificador" class="w-full" />
         </div>
+
         <div>
             <x-input-label value="Nivel" for="nivel" />
             <x-text-input type="text" name="nivel" :value="old('nivel', $alumno->nivel ?? '')" />
@@ -44,7 +47,8 @@
 
         <div class="col-span-">
             <x-input-label value="Comentario" for="comentario" />
-            <textarea name="comentario" rows="3" class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
+            <textarea name="comentario" rows="3"
+                class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
         </div>
     </div>
 </div>

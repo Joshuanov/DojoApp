@@ -7,20 +7,22 @@ use Illuminate\Http\Request;
 
 class AlumnoController extends Controller
 {
-  public function index(Request $request)
-{
-    $query = Alumno::query();
+    public function index(Request $request)
+    {
+        $query = Alumno::query();
 
-    if ($request->filled('busqueda')) {
-        $query->where('nombre_alumno', 'like', '%' . $request->busqueda . '%')
-              ->orWhere('apellido_paterno', 'like', '%' . $request->busqueda . '%')
-              ->orWhere('apellido_materno', 'like', '%' . $request->busqueda . '%');
+        if ($request->filled('busqueda')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nombre_alumno', 'like', '%' . $request->busqueda . '%')
+                    ->orWhere('apellido_paterno', 'like', '%' . $request->busqueda . '%')
+                    ->orWhere('apellido_materno', 'like', '%' . $request->busqueda . '%');
+            });
+        }
+
+        $alumnos = $query->orderBy('apellido_paterno')->paginate(10)->withQueryString();
+
+        return view('alumnos.index', compact('alumnos'));
     }
-
-    $alumnos = $query->paginate(10);
-
-    return view('alumnos.index', compact('alumnos'));
-}
 
 
     public function create()
