@@ -25,17 +25,20 @@
             <x-text-input type="number" name="edad" :value="old('edad', $alumno->edad ?? '')" required />
         </div>
 
-         <!--CONTACTO-->
+         <!--RUT-->
+        <div>
+            <x-input-label for="rut" value="RUT" />
+            <x-text-input id="rut" name="rut" type="text" :value="old('rut', $alumno->rut ?? '')" required
+                placeholder="Ej: 12345678-9" pattern="^\d{7,8}-[0-9kK]{1}$"
+                title="Ingrese un RUT válido sin puntos, con guion y dígito verificador" />
+        </div>
+    
+        <!--CONTACTO-->
         <div>
             <x-input-label value="Contacto" for="contacto" />
             <x-text-input type="text" name="contacto" :value="old('contacto', $alumno->contacto ?? '')" />
         </div>
 
-        <!--RUT-->
-        <div>
-            <x-input-label value="RUT" for="rut" />
-            <x-text-input type="text" name="rut" :value="old('rut', $alumno->rut ?? '')" required />
-        </div>
 
         <!--LISTA NIVELES-->
          <div>
@@ -95,22 +98,75 @@
                 'activo'=>'Activo', 
                 'congelado' => 'Congelado', 
                 'baja' => 'Baja']"
-            :selected="old('estado',$alumno->estado ?? '')">
-            </x-select>
+            :selected="old('estado',$alumno->estado ?? '')"/>
         </div>
 
         <!--PLAN-->
         <!--Se crea un arreglo nombre_plan - id para las opciones-->
-       <div>
-            <x-select name="plan_id" label="Plan" :options="$planes->pluck('nombre_plan', 'id')->prepend('Selecciona un plan', '')"
-            :selected="old('plan_id', optional($alumno?->alumnoPlan)->plan_id)">
-            </x-select>
+        <div x-data="{ mostrar: false}">
+            <x-select name="plan_id" x-ref="planSelect" label="Plan" :options="$planes->pluck('nombre_plan', 'id')->prepend('Selecciona un plan', '')->toArray()"
+            :selected="old('plan_id', optional($alumno?->alumnoPlan)->plan_id)" @change="mostrar = true"/>
+
+            <div x-data="{ mostrar: false }">
+                <button
+                    type="button"
+                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded mt-2"
+                    @click="mostrar = !mostrar"
+                >
+                    Personalizar
+                </button>
+
+                <div x-show="mostrar" class="mt-4 p-4 border border-gray-700 rounded bg-gray-800">
+                    <h3 class="text-lg font-bold mb-2 text-white">Detalles del contrato</h3>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-white">Duración (meses)</label>
+                            <input type="number" name="duracion_meses" class="w-full rounded p-1" />
+                        </div>
+
+                        <div>
+                            <label class="text-white">Cuotas</label>
+                            <input type="number" name="num_cuotas" class="w-full rounded p-1" />
+                        </div>
+
+                        <div>
+                            <label class="text-white">Monto mensual</label>
+                            <input type="number" name="monto_cuota" class="w-full rounded p-1" />
+                        </div>
+
+                        <div>
+                            <label class="text-white">Pago inicial</label>
+                            <input type="number" name="pago_inicial" class="w-full rounded p-1" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        
+
+
+
 
         <!--COMENTARIOS-->
         <div>
             <x-input-label value="Comentario" for="comentario" />
-            <textarea name="comentario" rows="3" class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
+            <textarea name="comentario" rows="3"
+                class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
         </div>
     </div>
+
+
+
+    <div x-data="{ abierto: false }" class="mt-4">
+    <button @click="abierto = !abierto" class="bg-blue-500 text-white px-3 py-1 rounded">
+        Mostrar prueba Alpine
+    </button>
+
+    <div x-show="abierto" class="mt-2 text-white">
+        ✅ Alpine está funcionando
+    </div>
+</div>
+
 </div>

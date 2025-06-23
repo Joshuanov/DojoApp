@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alumno;
 use \App\Models\Plan;
+use App\Services\GeneradorCuotasService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
@@ -56,38 +57,39 @@ class AlumnoController extends Controller
             'plan_id' => ['nullable', 'numeric', Rule::exists('planes', 'id')],
         ]);
 
-        logger('Pasó la validación');
 
-
-        // Crear el alumno, excluyendo plan_id porque no va en la tabla alumnos
+        // Crear el alumno, excluyendo plan_id, porque no va en la tabla alumnos
         $alumno = Alumno::create($request->except('plan_id'));
 
-        // Log para depurar si se está recibiendo el plan_id
-        logger('plan_id recibido: ' . $request->plan_id);
 
         // Si el plan fue seleccionado, crear el contrato
         if ($request->filled('plan_id')) {
-        $plan = \App\Models\Plan::find($request->plan_id);
+            $plan = \App\Models\Plan::find($request->plan_id);
+
+            //Calculo de fecha de fin de plan con Carbon
+            $fecha_fin = Carbon::now()->addMonths($plan->duracion_meses + 0); // 0 = meses_congelados iniciales
+
+        
+        $contrato = \App\Models\AlumnoPlan::create([
+                'alumno_id'       => $alumno->id,
+                'plan_id'         => $plan->id,
+                'fecha_inicio'    => now(),
+                'duracion_meses'  => $plan->duracion_meses,
+                'num_cuotas'      => $plan->duracion_meses,
+                'monto_cuota'     => $plan->monto_base_mensual,
+                'pago_inicial'    => $plan->pago_inicial,
+                'estado'          => 'activo',
+                'meses_congelados' => 0,
+                'fecha_fin_real'    => $fecha_fin,
+
+            ]);
+
+        
+        app(GeneradorCuotasService::class)->generar($contrato);
 
 
-        //Calculo de fecha de fin de plan con Carbon
-        $fecha_fin = Carbon::now()->addMonths($plan->duracion_meses + 0); // 0 = meses_congelados iniciales
 
-        \App\Models\AlumnoPlan::create([
-            'alumno_id'       => $alumno->id,
-            'plan_id'         => $plan->id,
-            'fecha_inicio'    => now(),
-            'duracion_meses'  => $plan->duracion_meses,
-            'num_cuotas'      => $plan->duracion_meses,
-            'monto_cuota'     => $plan->monto_base_mensual,
-            'pago_inicial'    => $plan->pago_inicial,
-            'estado'          => 'activo',
-            'meses_congelados' => 0,
-            'fecha_fin_real'    => $fecha_fin,
-
-            
-        ]);
-    }
+        }
 
         return redirect()->route('alumnos.index')->with('success', 'Alumno creado correctamente.');
     }

@@ -9,6 +9,8 @@ class Mensualidad extends Model
 {
     use HasFactory;
 
+    protected $table = 'mensualidades';
+
     protected $fillable = [
         'alumno_plan_id',
         'nro_cuota',

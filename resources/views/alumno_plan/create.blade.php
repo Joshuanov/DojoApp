@@ -38,12 +38,12 @@
 
                 <div>
                     <x-input-label for="fecha_inicio" value="Fecha de Inicio" />
-                    <x-text-input type="date" name="fecha_inicio" required />
+                    <x-text-input type="date" name="fecha_inicio" id="fecha_inicio" required />
                 </div>
 
                 <div>
                     <x-input-label for="duracion_meses" value="Duración (meses)" />
-                    <x-text-input type="number" name="duracion_meses" required />
+                    <x-text-input type="number" name="duracion_meses" id="duracion_meses" required />
                 </div>
 
                 <div>
@@ -71,9 +71,10 @@
                     <x-text-input type="number" name="meses_congelados" required />
                 </div>
 
+                 {{-- Campo calculado automáticamente --}}
                 <div>
-                    <x-input-label for="fecha_fin_real" value="Fecha Fin Real" />
-                    <x-text-input type="date" name="fecha_fin_real" required />
+                    <x-input-label for="fecha_fin_real" value="Fecha Fin Real (calculada automáticamente)" />
+                    <x-text-input type="text" id="fecha_fin_real" class="bg-gray-100" readonly />
                 </div>
             </div>
 

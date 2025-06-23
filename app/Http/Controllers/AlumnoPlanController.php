@@ -6,6 +6,7 @@ use App\Models\AlumnoPlan;
 use App\Models\Alumno;
 use App\Models\Plan;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AlumnoPlanController extends Controller
 {
@@ -56,10 +57,12 @@ class AlumnoPlanController extends Controller
             'pago_inicial' => 'required|integer',
             'observaciones' => 'nullable|string',
             'meses_congelados' => 'required|integer',
-            'fecha_fin_real' => 'required|date',
         ]);
 
-        AlumnoPlan::create($request->all());
+        $datos = $request->all();
+        $datos['fecha_fin_real'] = Carbon::parse($request->fecha_inicio)->addMonths($request->duracion_meses);
+
+        AlumnoPlan::create($datos);
 
         return redirect()->route('alumno_plan.index')->with('success', 'Plan de alumno creado correctamente.');
     }
@@ -90,10 +93,12 @@ class AlumnoPlanController extends Controller
             'pago_inicial' => 'required|integer',
             'observaciones' => 'nullable|string',
             'meses_congelados' => 'required|integer',
-            'fecha_fin_real' => 'required|date',
         ]);
 
-        $alumnoPlan->update($request->all());
+        $datos = $request->all();
+        $datos['fecha_fin_real'] = Carbon::parse($request->fecha_inicio)->addMonths($request->duracion_meses);
+
+        $alumnoPlan->update($datos);
 
         return redirect()->route('alumno_plan.index')->with('success', 'Plan de alumno actualizado correctamente.');
     }

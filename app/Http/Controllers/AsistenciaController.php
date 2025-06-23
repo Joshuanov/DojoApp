@@ -7,13 +7,38 @@ use App\Models\Alumno;
 use App\Models\TipoClase;
 use Illuminate\Http\Request;
 
+
+
 class AsistenciaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $asistencias = Asistencia::with(['alumno', 'tipoClase'])->orderByDesc('fecha')->paginate(10);
-        return view('asistencias.index', compact('asistencias'));
+        $asistencias = Asistencia::with(['alumno', 'tipoClase'])
+            ->when($request->alumno, function ($query, $alumno) {
+                $query->whereHas('alumno', function ($q) use ($alumno) {
+                    $q->where('nombre_alumno', 'like', "%$alumno%")
+                        ->orWhere('apellido_paterno', 'like', "%$alumno%")
+                        ->orWhere('apellido_materno', 'like', "%$alumno%");
+                });
+            })
+            ->when($request->tipo_clase, function ($query, $tipoClaseId) {
+                $query->where('tipo_clase_id', $tipoClaseId);
+            })
+            ->when($request->filled('fecha_desde'), function ($query) use ($request) {
+                $query->whereDate('fecha', '>=', $request->fecha_desde);
+            })
+            ->when($request->filled('fecha_hasta'), function ($query) use ($request) {
+                $query->whereDate('fecha', '<=', $request->fecha_hasta);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $tiposClase = TipoClase::all(); // Para el dropdown
+
+        return view('asistencias.index', compact('asistencias', 'tiposClase'));
     }
+
 
     public function create()
     {

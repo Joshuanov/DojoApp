@@ -40,7 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('planes', PlanController::class)->parameters(['planes' => 'plan']);
     Route::resource('alumno_plan', AlumnoPlanController::class);
     Route::resource('asistencias', AsistenciaController::class);
-    Route::resource('mensualidades', MensualidadController::class);
+    Route::resource('mensualidades', MensualidadController::class)->parameters([
+        'mensualidades' => 'mensualidad',
+    ]);
+
     Route::resource('tipo_clase', TipoClaseController::class);
 });
 

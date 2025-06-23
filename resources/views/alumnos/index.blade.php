@@ -8,8 +8,15 @@
         <a href="{{ route('alumnos.create') }}"
             class="mb-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Nuevo Alumno</a>
 
+        @if (session('success'))
+            <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <form method="GET" class="mb-4">
-            <input type="text" name="busqueda" value="{{ request('busqueda') }}" placeholder="Buscar..."
+            <input type="text" name="busqueda" value="{{ request('busqueda') }}"
+                placeholder="Buscar por nombre de alumno "
                 class="border border-gray-300 rounded-md px-4 py-2 w-full md:w-1/3">
             <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                 Buscar
@@ -55,5 +62,14 @@
                 @endforeach
             </tbody>
         </table>
+
+        @if ($alumnos->hasPages())
+            <div class="mt-4">
+                {{ $alumnos->links() }}
+            </div>
+        @else
+            <p class="text-sm text-gray-500 mt-4">No hay suficientes resultados para paginar.</p>
+        @endif
+
     </div>
 </x-app-layout>
