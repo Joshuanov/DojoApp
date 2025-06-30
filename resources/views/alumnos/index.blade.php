@@ -6,7 +6,7 @@
     <!--BOTON CREAR NUEVO ALUMNO-->
     <div class="py-4 px-6">
         <a href="{{ route('alumnos.create') }}"
-            class="mb-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Nuevo Alumno</a>
+            class="mb-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Registrar Alumno</a>
 
         @if (session('success'))
             <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">

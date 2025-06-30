@@ -22,7 +22,7 @@ class Alumno extends Model
         'comentario',
     ];
 
-    // Un alumno tiene solo un plan personalizado (relación muchos a uno
+    // Un alumno tiene solo un plan personalizado (relación muchos a uno)
     public function alumnoPlan()
     {
         return $this->hasOne(AlumnoPlan::class);

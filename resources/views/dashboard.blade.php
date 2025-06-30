@@ -11,22 +11,22 @@
             <!-- Módulo Alumnos -->
             <a href="{{ route('alumnos.index') }}"
                 class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Alumnos</h5>
-                <p class="text-gray-700 dark:text-gray-400">Registrar y gestionar alumnos activos.</p>
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Gestión de alumnos</h5>
+                <p class="text-gray-700 dark:text-gray-400">Inscribir, visualizar, editar o dar de baja alumnos.</p>
             </a>
 
             <!-- Módulo Planes -->
             <a href="{{ route('planes.index') }}"
                 class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Planes</h5>
-                <p class="text-gray-700 dark:text-gray-400">Crear y administrar planes de entrenamiento.</p>
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Crear planes</h5>
+                <p class="text-gray-700 dark:text-gray-400">Crear o editar planes de entrenamiento.</p>
             </a>
 
             <!-- Módulo Asignación Plan-Alumno -->
             <a href="{{ route('alumno_plan.index') }}"
                 class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Asignar Planes</h5>
-                <p class="text-gray-700 dark:text-gray-400">Asociar alumnos a sus respectivos planes.</p>
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Listado de planes contratados</h5>
+                <p class="text-gray-700 dark:text-gray-400">Visualizar o editar planes de cada alumno.</p>
             </a>
 
             <!-- Módulo Asistencias -->

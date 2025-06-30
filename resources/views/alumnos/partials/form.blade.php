@@ -103,70 +103,158 @@
 
         <!--PLAN-->
         <!--Se crea un arreglo nombre_plan - id para las opciones-->
-        <div x-data="{ mostrar: false}">
-            <x-select name="plan_id" x-ref="planSelect" label="Plan" :options="$planes->pluck('nombre_plan', 'id')->prepend('Selecciona un plan', '')->toArray()"
-            :selected="old('plan_id', optional($alumno?->alumnoPlan)->plan_id)" @change="mostrar = true"/>
+            <!--Esto prepara AlpineJS para manejar los datos del plan seleccionado y rellenar los campos.-->
+           <div 
+                x-data="() => ({
+                    mostrar: false,
+                    planes: {{ Js::from($planes) }},
+                    selectedPlan: null,
+                    duracion: '',
+                    cuotas: '',
+                    monto: '',
+                    pagoInicial: '',
+                    cuotasList: [],
+                    diaPago: 1,
 
-            <div x-data="{ mostrar: false }">
-                <button
-                    type="button"
-                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-3 py-1 rounded mt-2"
-                    @click="mostrar = !mostrar"
+                    generarCuotas() {
+                        this.cuotasList = Array.from({ length: this.cuotas }, (_, i) => {
+                            const hoy = new Date();
+                            const dia = parseInt(this.diaPago) || 5;
+
+                            const fecha = new Date(hoy.getFullYear(), hoy.getMonth() + i, 1);
+                            const maxDias = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0).getDate();
+                            fecha.setDate(Math.min(dia, maxDias));
+
+                            return {
+                                numero: i + 1,
+                                fecha: fecha.toISOString().split('T')[0],
+                                monto: this.monto
+                            };
+                        });
+                    },
+
+                    actualizarCampos(planId) {
+                        if (!planId) {
+                            this.mostrar = false;
+                            return;
+                        }
+
+                        const plan = this.planes.find(p => p.id == planId);
+                        if (plan) {
+                            this.selectedPlan = plan;
+                            this.duracion = plan.duracion_meses;
+                            this.cuotas = plan.duracion_meses;
+                            this.monto = plan.monto_base_mensual;
+                            this.pagoInicial = plan.pago_inicial;
+                            this.generarCuotas();
+                            this.mostrar = true;
+                        }
+                    },
+
+                    totalCuotas() {
+                        return this.cuotasList.reduce((suma, c) => suma + Number(c.monto || 0), 0);
+                    }
+                        
+
+                })"
                 >
-                    Personalizar
-                </button>
+                
+                <!--SELECCIÓN DE PLAN-->
+                <x-select
+                    name="plan_id"
+                    x-ref="planSelect"
+                    label="Plan"
+                    :options="$planes->pluck('nombre_plan', 'id')->prepend('Selecciona un plan', '')->toArray()"
+                    :selected="old('plan_id', optional($alumno?->alumnoPlan)->plan_id)"
+                    @change="actualizarCampos($event.target.value)"
+                />
 
+                <!--Genera las cuotas cada vez que cambia el monto -->
+                <div x-effect="if (cuotasList.length && monto) generarCuotas()"></div>
+
+                <div x-effect="if (cuotas) duracion = cuotas"></div>
+
+
+               
+
+                <!--TABLA DE PERSONALIZACIÓN -->
                 <div x-show="mostrar" class="mt-4 p-4 border border-gray-700 rounded bg-gray-800">
                     <h3 class="text-lg font-bold mb-2 text-white">Detalles del contrato</h3>
 
                     <div class="grid grid-cols-2 gap-4">
+                        
+
                         <div>
-                            <label class="text-white">Duración (meses)</label>
-                            <input type="number" name="duracion_meses" class="w-full rounded p-1" />
+                            <label class="text-white">N° cuotas/meses</label>
+                            <input type="number" name="num_cuotas" x-model="cuotas" @change="generarCuotas()" class="w-full rounded p-1" />
                         </div>
 
                         <div>
-                            <label class="text-white">Cuotas</label>
-                            <input type="number" name="num_cuotas" class="w-full rounded p-1" />
-                        </div>
-
-                        <div>
-                            <label class="text-white">Monto mensual</label>
-                            <input type="number" name="monto_cuota" class="w-full rounded p-1" />
+                            <label class="text-white">Monto cuota</label>
+                            <input type="number" name="monto_cuota" x-model="monto" class="w-full rounded p-1" />
                         </div>
 
                         <div>
                             <label class="text-white">Pago inicial</label>
-                            <input type="number" name="pago_inicial" class="w-full rounded p-1" />
+                            <input type="number" name="pago_inicial" x-model="pagoInicial" class="w-full rounded p-1" />
                         </div>
+                        <div>
+                            <label class="text-white">Día de pago</label>
+                            <input type="number" min="1" max="28" x-model="diaPago" class="w-full rounded p-1" />
+                        </div>
+
                     </div>
+
+                    <!--TABLA DE CUOTAS-->
+                    <div x-show="cuotasList.length > 0" class="mt-4 overflow-x-auto">
+                        <h4 class="text-white text-lg mb-2">Detalle de cuotas</h4>
+                        <table class="table-auto table-fixed w-full text-white bg-gray-900 rounded">
+                            <thead>
+                                <tr>
+
+                                    <th class="border w-1/8 px-2 ">N°</th>
+                                    <th class="border w-3/6 px-2">Fecha</th>
+                                    <th class="border w-2/6 px-2">Monto</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="cuota in cuotasList" :key="cuota.numero">
+                                    <tr>
+                                        <td class="border px-2 py-1 text-center" x-text="cuota.numero"></td>
+                                        <td class="border px-2 py-1">
+                                            <input type="date" x-model="cuota.fecha" class="w-full rounded bg-gray-800 text-white border-gray-600">
+                                        </td>
+                                        <td class="border px-2 py-1">
+                                            <input type="number" x-model="cuota.monto" class="w-full text-right pr-2 rounded bg-gray-800 text-white border-gray-600">
+                                        </td>
+                                    </tr>
+                                </template>
+                                <!--SUMA TOTAL DE CUOTAS-->
+                                <tr class="bg-gray-900 font-bold text-white">
+                                    <td colspan="2" class="text-right font-bold pr-4">Total:</td>
+                                    <td>
+                                        <input type="text" class="w-full text-right bg-transparent border-none" :value="totalCuotas().toLocaleString()" readonly />
+                                    </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
+
             </div>
         </div>
 
         
-
-
-
-
         <!--COMENTARIOS-->
         <div>
             <x-input-label value="Comentario" for="comentario" />
             <textarea name="comentario" rows="3"
                 class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
         </div>
-    </div>
 
-
-
-    <div x-data="{ abierto: false }" class="mt-4">
-    <button @click="abierto = !abierto" class="bg-blue-500 text-white px-3 py-1 rounded">
-        Mostrar prueba Alpine
-    </button>
-
-    <div x-show="abierto" class="mt-2 text-white">
-        ✅ Alpine está funcionando
-    </div>
+    </div> 
 </div>
 
-</div>
