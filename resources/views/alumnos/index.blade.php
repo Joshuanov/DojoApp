@@ -40,7 +40,15 @@
                     <tr>
                         <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }}
                             {{ $alumno->apellido_materno }}</td>
-                        <td class="border px-4 py-2">{{ $alumno->alumnoPlan->plan->nombre_plan ?? 'Sin plan asignado' }}</td>
+                        <td class="border px-4 py-2">
+                            @if($alumno->alumnoPlan && $alumno->alumnoPlan->plan)
+                                <a href="{{ route('alumnos.contrato', $alumno->id) }}" class="text-blue-600 hover:underline">
+                                    {{ $alumno->alumnoPlan->plan->nombre_plan }}
+                                </a>
+                            @else
+                                Sin plan asignado
+                            @endif
+                        </td>
                         <td class="border px-4 py-2">{{ $alumno->nivel_nombre }}</td>
                         <td class="border px-4 py-2">{{ $alumno->grado_nombre }}</td>
                         <td class="border px-4 py-2">{{ $alumno->estado_nombre}}</td>

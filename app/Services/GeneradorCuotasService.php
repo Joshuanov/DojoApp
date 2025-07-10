@@ -17,21 +17,17 @@ use Illuminate\Support\Carbon;
 class GeneradorCuotasService
 {
     //Esta función genera una cuota por cada mes, comenzando desde la fecha de inicio del contrato.
-    public function generar(AlumnoPlan $alumnoPlan): void
+    // Esta función recibe un objeto AlumnoPlan y una lista de cuotas
+    public function generar(AlumnoPlan $alumnoPlan, array $cuotasList): void
     {
-        $fechaInicio = Carbon::parse($alumnoPlan->fecha_inicio); //Carbon::parse convierte texto a objeto fecha
-        $montoCuota = $alumnoPlan->monto_cuota;
-        $numCuotas = $alumnoPlan->num_cuotas;
-
-        //Creación de cuotas
-        for ($i = 1; $i <= $numCuotas; $i++) {
+        foreach ($cuotasList as $i => $cuota) {
             Mensualidad::create([
                 'alumno_plan_id'    => $alumnoPlan->id,
-                'nro_cuota'         => $i,
-                'monto_cuota'       => $montoCuota,
+                'nro_cuota'         => $i + 1,
+                'monto_cuota'       => $cuota['monto'],
                 'estado_pago'       => 'pendiente',
-                'fecha_pago'        => $fechaInicio->copy()->addMonths($i - 1),
-                'fecha_vencimiento' => $fechaInicio->copy()->addMonths($i - 1),
+                'fecha_pago'        => $cuota['fecha'],
+                'fecha_vencimiento' => $cuota['fecha'],
                 'observaciones'     => null,
             ]);
         }

@@ -37,4 +37,10 @@ class AlumnoPlan extends Model
     {
         return $this->belongsTo(Plan::class);
     }
+
+    //Un plan tiene muchas cuotas
+    public function mensualidades() {
+    return $this->hasMany(Mensualidad::class);
+}
+
 }

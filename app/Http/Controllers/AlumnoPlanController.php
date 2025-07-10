@@ -46,6 +46,10 @@ class AlumnoPlanController extends Controller
 
     public function store(Request $request)
     {
+
+        
+        dd('LLEGA AL MÉTODO');
+
         $request->validate([
             'alumno_id' => 'required|exists:alumnos,id',
             'plan_id' => 'required|exists:planes,id',
@@ -62,9 +66,32 @@ class AlumnoPlanController extends Controller
         $datos = $request->all();
         $datos['fecha_fin_real'] = Carbon::parse($request->fecha_inicio)->addMonths($request->duracion_meses);
 
-        AlumnoPlan::create($datos);
+        //Lista de cuotas vienen en JSON y deben ser decodificadas para guardarlas.
+        $cuotasList = json_decode($request->input('cuotasList'), true);
+
+       //Guardamos plan de alumno (contrato) en variable.
+        $alumnoPlan = AlumnoPlan::create($datos);
+
+        dd([
+            'datosPlan' => $datos,
+            'cuotasList' => $cuotasList,
+            'alumnoPlan' => $alumnoPlan
+        ]);
+
+        //Recorrer la lista de cuotas para crear las mensualidades
+        foreach ($cuotasList as $mensualidad) {
+            $alumnoPlan->mensualidades()->create([
+                'nro_cuota' => $mensualidad['numero'],
+                'monto_cuota' => $mensualidad['monto'],
+                'fecha_pago' => $mensualidad['fecha'],
+                'fecha_vencimiento' => $mensualidad['fecha'], // o ajusta según regla de vencimiento
+                'estado_pago' => 'pendiente'
+            ]);
+        }
 
         return redirect()->route('alumno_plan.index')->with('success', 'Plan de alumno creado correctamente.');
+
+
     }
 
     public function show(AlumnoPlan $alumnoPlan)

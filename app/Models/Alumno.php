@@ -9,6 +9,16 @@ class Alumno extends Model
 {
     use HasFactory;
 
+    // Nombre de la tabla asociada al modelo
+    protected $table = 'alumnos';
+    // Clave primaria de la tabla
+    protected $primaryKey = 'id';
+    // Indica si la clave primaria es un entero autoincremental
+    public $incrementing = true;
+    // Indica si los campos de fecha se deben manejar automáticamente
+    public $timestamps = true;
+    
+    // Campos que se pueden asignar masivamente
     protected $fillable = [
         'nombre_alumno',
         'apellido_paterno',
@@ -41,9 +51,8 @@ class Alumno extends Model
     }
 
 
-
     //Mostrar nombre/texto, no clave guardada en bb.dd
-    //GRADOS
+    //GRADOS 
     public static function grados()
     {
         return 

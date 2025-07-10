@@ -102,8 +102,8 @@
         </div>
 
         <!--PLAN-->
-        <!--Se crea un arreglo nombre_plan - id para las opciones-->
-            <!--Esto prepara AlpineJS para manejar los datos del plan seleccionado y rellenar los campos.-->
+            <!--PERSONALIZACIÓN DE CONTRATO AL MOMENTO DE REGISTRAR ALUMNO-->
+            <!--DETALLES DEL CONTRATO-->
            <div 
                 x-data="() => ({
                     mostrar: false,
@@ -114,17 +114,22 @@
                     monto: '',
                     pagoInicial: '',
                     cuotasList: [],
-                    diaPago: 1,
+                    diaPago: (new Date()).getDate(),
 
                     generarCuotas() {
+                        const hoy = new Date();
                         this.cuotasList = Array.from({ length: this.cuotas }, (_, i) => {
-                            const hoy = new Date();
-                            const dia = parseInt(this.diaPago) || 5;
-
-                            const fecha = new Date(hoy.getFullYear(), hoy.getMonth() + i, 1);
-                            const maxDias = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0).getDate();
-                            fecha.setDate(Math.min(dia, maxDias));
-
+                            let fecha;
+                            if (i === 0) {
+                                // Primera cuota: fecha de hoy, sin modificar el día
+                                fecha = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+                            } else {
+                                // Siguientes cuotas: día de pago en los meses siguientes
+                                const dia = parseInt(this.diaPago) || hoy.getDate();
+                                fecha = new Date(hoy.getFullYear(), hoy.getMonth() + i, 1);
+                                const maxDias = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0).getDate();
+                                fecha.setDate(Math.min(dia, maxDias));
+                            }
                             return {
                                 numero: i + 1,
                                 fecha: fecha.toISOString().split('T')[0],
@@ -181,9 +186,8 @@
                 <div x-show="mostrar" class="mt-4 p-4 border border-gray-700 rounded bg-gray-800">
                     <h3 class="text-lg font-bold mb-2 text-white">Detalles del contrato</h3>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-4">           
                         
-
                         <div>
                             <label class="text-white">N° cuotas/meses</label>
                             <input type="number" name="num_cuotas" x-model="cuotas" @change="generarCuotas()" class="w-full rounded p-1" />
@@ -218,6 +222,7 @@
 
                                 </tr>
                             </thead>
+
                             <tbody>
                                 <template x-for="cuota in cuotasList" :key="cuota.numero">
                                     <tr>
@@ -230,6 +235,7 @@
                                         </td>
                                     </tr>
                                 </template>
+
                                 <!--SUMA TOTAL DE CUOTAS-->
                                 <tr class="bg-gray-900 font-bold text-white">
                                     <td colspan="2" class="text-right font-bold pr-4">Total:</td>
@@ -240,11 +246,25 @@
                                 
                             </tbody>
                         </table>
+                        
+
                     </div>
 
                 </div>
 
+                <!--Inputs ocultos enviando información modificada-->
+                <input type="hidden" name="duracion" :value="duracion">
+                <input type="hidden" name="cuotas" :value="cuotas">
+                <input type="hidden" name="duracion_meses" :value="cuotas">
+                <input type="hidden" name="monto" :value="monto">
+                <input type="hidden" name="pago_inicial" :value="pagoInicial">
+                <input type="hidden" name="meses_congelados" value="0"> <!-- Por defecto 0 meses congelados -->
+                <input type="hidden" name="fecha_inicio" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}"> <!-- Fecha de inicio por defecto -->
+                <input type="hidden" name="cuotasList" :value="JSON.stringify(cuotasList)">
             </div>
+
+
+
         </div>
 
         
@@ -254,6 +274,10 @@
             <textarea name="comentario" rows="3"
                 class="w-full rounded-md border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 focus:ring focus:ring-indigo-200">{{ old('comentario', $alumno->comentario ?? '') }}</textarea>
         </div>
+
+
+      
+
 
     </div> 
 </div>

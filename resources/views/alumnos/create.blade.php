@@ -5,6 +5,7 @@
 
     <div class="py-4 px-6 space-y-4">
         <!--FORMULARIO-->
+        <!--Alumnos.store registrará alumno + contrato + cuotas-->
         <form action="{{ route('alumnos.store') }}" method="POST">
             @csrf
             @include('alumnos.partials.form', ['alumno' => null, 'planes'=> $planes])

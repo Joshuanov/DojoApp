@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    
     Route::get('/asistencias/masiva', [AsistenciaController::class, 'vistaMasiva'])->name('asistencias.masiva');
     Route::post('/asistencias/masiva', [AsistenciaController::class, 'guardarMasiva'])->name('asistencias.masiva.store');
 
@@ -45,6 +46,9 @@ Route::middleware('auth')->group(function () {
     ]);
 
     Route::resource('tipo_clase', TipoClaseController::class);
+    
+    // Rutas para la gestión de contratos de alumnos desde lista de alumnos
+    Route::get('/alumnos/{alumno}/contrato', [AlumnoController::class, 'verContrato'])->name('alumnos.contrato');
 });
 
 require __DIR__ . '/auth.php';
