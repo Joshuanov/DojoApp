@@ -25,9 +25,9 @@ class GeneradorCuotasService
                 'alumno_plan_id'    => $alumnoPlan->id,
                 'nro_cuota'         => $i + 1,
                 'monto_cuota'       => $cuota['monto'],
-                'estado_pago'       => 'pendiente',
+                'estado_pago'       => $cuota['monto'] == 0 ? 'liberado' : 'pendiente',
                 'fecha_pago'        => $cuota['fecha'],
-                'fecha_vencimiento' => $cuota['fecha'],
+                'fecha_vencimiento' => Carbon::parse($cuota['fecha'])->addDays(7),
                 'observaciones'     => null,
             ]);
         }

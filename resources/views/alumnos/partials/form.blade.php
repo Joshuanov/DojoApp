@@ -210,6 +210,7 @@
                     </div>
 
                     <!--TABLA DE CUOTAS-->
+                    <!--  -->
                     <div x-show="cuotasList.length > 0" class="mt-4 overflow-x-auto">
                         <h4 class="text-white text-lg mb-2">Detalle de cuotas</h4>
                         <table class="table-auto table-fixed w-full text-white bg-gray-900 rounded">
@@ -226,6 +227,7 @@
                             <tbody>
                                 <template x-for="cuota in cuotasList" :key="cuota.numero">
                                     <tr>
+                                        
                                         <td class="border px-2 py-1 text-center" x-text="cuota.numero"></td>
                                         <td class="border px-2 py-1">
                                             <input type="date" x-model="cuota.fecha" class="w-full rounded bg-gray-800 text-white border-gray-600">

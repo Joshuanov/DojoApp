@@ -11,8 +11,15 @@
             <!-- Módulo Alumnos -->
             <a href="{{ route('alumnos.index') }}"
                 class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Gestión de alumnos</h5>
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Listado de alumnos</h5>
                 <p class="text-gray-700 dark:text-gray-400">Inscribir, visualizar, editar o dar de baja alumnos.</p>
+            </a>
+
+            <!-- Módulo Cuotas Vencidas -->
+            <a href="{{ route('alumnos.vencidos') }}"
+                class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Alumnos con cuotas vencidas</h5>
+                <p class="text-gray-700 dark:text-gray-400">Ver cuotas pendientes que han vencido</p>
             </a>
 
             <!-- Módulo Planes -->
@@ -49,7 +56,6 @@
                 <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Mensualidades</h5>
                 <p class="text-gray-700 dark:text-gray-400">Ver y registrar pagos mensuales</p>
             </a>
-
 
 
         </div>

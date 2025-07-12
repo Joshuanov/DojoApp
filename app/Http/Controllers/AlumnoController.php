@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Alumno;
 use \App\Models\Plan;
 use App\Services\GeneradorCuotasService;
+use App\Services\EstadoMensualidadService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
-
 
 
 class AlumnoController extends Controller
@@ -173,9 +173,14 @@ class AlumnoController extends Controller
     }
 
 
-    public function verContrato($id)
-    {
-        $alumno = Alumno::with(['alumnoPlan.plan'])->findOrFail($id);
+    // METODO PARA VISUALIZAR EL CONTRATO DEL ALUMNO, SUS MENSUALIDADES Y REVISAR SI HAY VENCIDAS
+    public function verContrato($id, EstadoMensualidadService $estadoMensualidadService)
+    { 
+        $alumno = Alumno::with('alumnoPlan')->findOrFail($id);
+
+        // Se llama a servicio para revisar si hay mensualidades vencidas
+        $estadoMensualidadService->actualizarEstadosMensualidades($alumno);
+
 
         // Obtener todas las mensualidades del plan actual del alumno
         $mensualidades = [];
@@ -184,5 +189,17 @@ class AlumnoController extends Controller
         }
 
         return view('alumnos.contrato', compact('alumno', 'mensualidades'));
+    }
+
+    //Filtro de alumnos con cuotas vencidas
+    public function alumnosConCuotasVencidas()
+    {
+        $alumnos = \App\Models\Alumno::whereHas('alumnoPlan.mensualidades', function($query) {
+            $query->where('estado_pago', 'vencido'); //Trae alumnos con mensualidades vencidas
+        })->with(['alumnoPlan.mensualidades' => function($query) {
+            $query->where('estado_pago', 'vencido'); //asegura que solo se traigan las mensualidades vencidas de cada alumno
+        }])->get(); 
+
+        return view('alumnos.vencidos', compact('alumnos'));
     }
 }

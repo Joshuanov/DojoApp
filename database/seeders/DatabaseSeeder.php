@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -15,6 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Tabla: alumnos
+        DB::table('alumnos')->truncate();
         DB::table('alumnos')->insert([
             [
                 'nombre_alumno' => 'Juan',
@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Tabla: planes
+        DB::table('planes')->truncate();
         DB::table('planes')->insert([
             [
                 'nombre_plan' => 'Plan Básico',
@@ -50,6 +51,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Tabla: tipo_clase
+        DB::table('tipo_clase')->truncate();
         DB::table('tipo_clase')->insert([
             [
                 'nombre_clase' => 'Tradicional',
@@ -62,6 +64,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Tabla: alumno_plan
+        DB::table('alumno_plan')->truncate();
         DB::table('alumno_plan')->insert([
             [
                 'alumno_id' => 1,
@@ -81,6 +84,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Tabla: asistencias
+        DB::table('asistencias')->truncate();
         DB::table('asistencias')->insert([
             [
                 'alumno_id' => 1,
@@ -94,14 +98,37 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Tabla: mensualidades
+        DB::table('mensualidades')->truncate();
         DB::table('mensualidades')->insert([
             [
                 'alumno_plan_id' => 1,
                 'nro_cuota' => 1,
                 'monto_cuota' => 20000,
+                'estado_pago' => 'pendiente',
+                'fecha_pago' => null,
+                'fecha_vencimiento' => Carbon::now()->subDays(10), // Vencida
+                'observaciones' => 'Debe pagar',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'alumno_plan_id' => 1,
+                'nro_cuota' => 2,
+                'monto_cuota' => 20000,
+                'estado_pago' => 'pendiente',
+                'fecha_pago' => null,
+                'fecha_vencimiento' => Carbon::now()->addDays(10), // No vencida
+                'observaciones' => 'Debe pagar',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'alumno_plan_id' => 1,
+                'nro_cuota' => 3,
+                'monto_cuota' => 20000,
                 'estado_pago' => 'pagado',
-                'fecha_pago' => Carbon::now()->subDays(10),
-                'fecha_vencimiento' => Carbon::now()->subDays(5),
+                'fecha_pago' => Carbon::now()->subDays(5),
+                'fecha_vencimiento' => Carbon::now()->subDays(2),
                 'observaciones' => 'Pagado en efectivo',
                 'created_at' => now(),
                 'updated_at' => now(),
