@@ -101,6 +101,7 @@
                                             default => ''
                                         };
                                     @endphp
+                                    
                                     <span class="rounded px-7 py-1 {{ $colorClass }}">
                                         {{ $mensualidad->estado_pago }}
                                     </span>

@@ -91,7 +91,8 @@
 
                                 <td class="px-4 py-2 text-center">
                                     <!-- Usar $alumno->mensualidadesPorPlan  -->
-                                    {{ $alumno->mensualidades->where('estado_pago', 'pendiente')->count() }} pendientes
+                                    <!-- {{ $alumno->mensualidades->where('estado_pago', 'pendiente')->count() }} pendientes -->
+                                    {{ $alumno->mensualidades->whereIn('estado_pago', ['pendiente', 'vencido'])->count() }} a pagar
                                 </td>
 
                                 <td class="px-4 py-2 text-center space-x-2">
@@ -158,8 +159,9 @@
 
                     <div class="space-y-2 max-h-64 overflow-y-auto">
                         @foreach ($mensualidades as $cuota)
+                        
                             <template
-                                x-if="alumnoId == {{ $cuota->alumnoPlan->alumno_id }} && '{{ $cuota->estado_pago }}' == 'pendiente'">
+                                x-if="alumnoId == {{ $cuota->alumnoPlan->alumno_id }} && ['pendiente', 'vencido'].includes('{{ $cuota->estado_pago }}')">
                                 <label class="flex items-center space-x-2">
                                     <input type="checkbox" name="cuotas[]" value="{{ $cuota->id }}">
                                     <span>
