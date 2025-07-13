@@ -133,7 +133,7 @@ class MensualidadController extends Controller
             // Actualiza las cuotas seleccionadas
             Mensualidad::whereIn('id', $request->cuotas)
                 ->update([
-                    'estado_pago' => 'Pagado',
+                    'estado_pago' => 'pagado',
                     'fecha_pago' => now()
                 ]);
 
