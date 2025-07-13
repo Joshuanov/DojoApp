@@ -91,31 +91,19 @@
                                 <td class="px-4 py-2 border text-right">${{ number_format($mensualidad->monto_cuota, 0, ',', '.') }}</td>
                                 <!-- Estado del Pago -->
                                 <td class="px-4 py-2 border capitalize text-center">
-                                    <form method="POST" action="{{ route('mensualidad.updateEstado', $mensualidad->id) }}">
-                                        @csrf
-                                        @method('PATCH')
-                                        <!-- Opciones de estados -->
-                                        <select 
-                                            x-data
-                                            name="estado_pago" 
-                                            onchange="this.form.submit()"
-                                            :class="{
-                                                'bg-green-700 text-white': $el.value == 'pagado',
-                                                'bg-yellow-500 text-white': $el.value == 'pendiente',
-                                                'bg-red-600 text-white': $el.value == 'vencido',
-                                                'bg-white text-black': $el.value == 'liberado'
-                                                }"
-                                            class="capitalize rounded px-7 py-1 border-none">
-                                            <!-- Pendiente -->
-                                            <option value="pendiente" {{ $mensualidad->estado_pago == 'pendiente' ? 'selected' : '' }}>Pendiente</option>
-                                            <!-- Pagado -->
-                                            <option value="pagado" {{ $mensualidad->estado_pago == 'pagado' ? 'selected' : '' }}>Pagado</option>
-                                            <!-- Vencido -->
-                                            <option value="vencido" {{ $mensualidad->estado_pago == 'vencido' ? 'selected' : '' }}>Vencido</option>
-                                            <!-- Liberado -->
-                                            <option value="liberado" {{ $mensualidad->estado_pago == 'liberado' ? 'selected' : '' }}>Liberado</option>
-                                        </select>
-                                    </form>
+                                    
+                                     @php
+                                        $colorClass = match($mensualidad->estado_pago) {
+                                            'pagado' => 'bg-green-700 text-white',
+                                            'pendiente' => 'bg-yellow-500 text-white',
+                                            'vencido' => 'bg-red-600 text-white',
+                                            'liberado' => 'bg-white text-black',
+                                            default => ''
+                                        };
+                                    @endphp
+                                    <span class="rounded px-7 py-1 {{ $colorClass }}">
+                                        {{ $mensualidad->estado_pago }}
+                                    </span>
                                 </td>
 
                                 <td class="px-4 py-2 border text-center">
