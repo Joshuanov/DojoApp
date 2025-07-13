@@ -47,7 +47,14 @@ class Alumno extends Model
     // Un alumno puede tener muchas mensualidades
     public function mensualidades()
     {
-        return $this->hasMany(Mensualidad::class);
+        return $this->hasManyThrough(
+            Mensualidad::class,
+            AlumnoPlan::class,
+            'alumno_id',       // Foreign key en `alumno_plan` que apunta a `alumnos.id`
+            'alumno_plan_id',  // Foreign key en `mensualidades` que apunta a `alumno_plan.id`
+            'id',              // Local key en `alumnos`
+            'id'               // Local key en `alumno_plan`
+        );
     }
 
 
@@ -93,7 +100,7 @@ class Alumno extends Model
     public function getGradoNombreAttribute()
     {
         //Llama a la función grados y toma el texto asociado a la clave para mostrar
-        return self::grados()[$this->grado] ?? this->grado;
+        return self::grados()[$this->grado] ?? $this->grado;
     }
 
 
@@ -102,7 +109,7 @@ class Alumno extends Model
     {
         return 
         [
-            'junior' =>'Junior', 
+            'junior' => 'Junior', 
             'basico' => 'Básico', 
             'intermedio' => 'Intermedio', 
             'avanzado' => 'Avanzado', 
@@ -115,28 +122,25 @@ class Alumno extends Model
     public function getNivelNombreAttribute() //atributo virtual nivel_nombre
     {
         //Llama a la función grados y toma el texto asociado a la clave para mostrar
-        return self::niveles()[$this->nivel] ?? this->nivel;
+        return self::niveles()[$this->nivel] ?? $this->nivel;
     }
 
-    
+
     //ESTADO
     public static function estados()
     {
-        return 
-        [
-            'activo'=>'Activo', 
-            'congelado' => 'Congelado', 
-            'baja' => 'Baja'
-        ];
+        return
+            [
+                'activo' => 'Activo',
+                'congelado' => 'Congelado',
+                'baja' => 'Baja'
+            ];
     }
 
     //Cuando se escriba $alumno->estados_nombre, devuelve un valor personalizado en lugar de un campo real de la base de datos
     public function getEstadoNombreAttribute() //atributo virtual estado_nombre
     {
         //Llama a la función grados y toma el texto asociado a la clave para mostrar
-        return self::estados()[$this->estado] ?? this->estado;
+        return self::estados()[$this->estado] ?? $this->estado;
     }
-
-
-
 }

@@ -25,4 +25,12 @@ class Mensualidad extends Model
     {
         return $this->belongsTo(AlumnoPlan::class);
     }
+
+    /*
+    public function alumno()
+    {
+        return $this->belongsTo(Alumno::class);
+    }
+    */
+        
 }

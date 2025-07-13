@@ -19,6 +19,7 @@
                 
                 <thead>
                     <!-- Cabecera de la tabla -->
+    
                     <tr>
                         <th class="px-4 py-2 border">Plan</th>
                         <th class="px-4 py-2 border">Fecha Inicio</th>
@@ -32,6 +33,7 @@
                         <th class="px-4 py-2 border">Fecha Fin</th>
                     </tr>
                 </thead>
+
                 <!-- Cuerpo de la tabla -->
                 <tbody>
                     <tr class="text-center">
@@ -54,6 +56,7 @@
                         <!-- Meses Congelados -->
                         <td class="px-4 py-2 border">{{ $alumno->alumnoPlan->meses_congelados }}</td>
                         <!-- Fecha de Fin de Plan -->
+
                         <td class="px-4 py-2 border">{{ $alumno->alumnoPlan->fecha_fin_real }}</td>
                     </tr>
                 </tbody>

@@ -25,6 +25,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     // Ruta para ver alumnos con cuotas vencidas
     Route::get('/alumnos/vencidos', [AlumnoController::class, 'alumnosConCuotasVencidas'])->name('alumnos.vencidos');
 
+    Route::post('/mensualidades/pagar', [MensualidadController::class, 'pagar'])->name('mensualidades.pagar');
 
     Route::get('/asistencias/masiva', [AsistenciaController::class, 'vistaMasiva'])->name('asistencias.masiva');
     Route::post('/asistencias/masiva', [AsistenciaController::class, 'guardarMasiva'])->name('asistencias.masiva.store');
@@ -47,6 +49,7 @@ Route::middleware('auth')->group(function () {
         'mensualidades' => 'mensualidad',
     ]);
 
+
     Route::resource('tipo_clase', TipoClaseController::class);
     
     // Rutas para la gestión de contratos de alumnos desde lista de alumnos
@@ -55,7 +58,6 @@ Route::middleware('auth')->group(function () {
     // Rutas para la gestión de mensualidades desde el contrato del alumno
     Route::patch('/mensualidad/{id}/estado', [MensualidadController::class, 'updateEstado'])->name('mensualidad.updateEstado');
 
-    
     
 
 });

@@ -24,7 +24,9 @@
         </form>
 
 
+
         <table class="min-w-full bg-white shadow rounded text-center">
+
             <thead>
                 <tr class="bg-gray-200">
                     <th class="px-4 py-2">Nombre</th>
@@ -42,7 +44,8 @@
                             {{ $alumno->apellido_materno }}</td>
                         <td class="border px-4 py-2">
                             @if($alumno->alumnoPlan && $alumno->alumnoPlan->plan)
-                                <a href="{{ route('alumnos.contrato', $alumno->id) }}" class="text-blue-600 hover:underline">
+
+                                <a href="{{ route('alumnos.contrato', $alumno->id) }}" class="text-blue-600 hover:underline">Ver Contrato aquí |
                                     {{ $alumno->alumnoPlan->plan->nombre_plan }}
                                 </a>
                             @else
@@ -64,7 +67,7 @@
                             </form>
                         </td>
                     </tr>
-            
+
                     </td>
                 </tr>
                 @endforeach

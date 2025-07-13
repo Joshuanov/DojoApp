@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -104,31 +105,9 @@ class DatabaseSeeder extends Seeder
                 'alumno_plan_id' => 1,
                 'nro_cuota' => 1,
                 'monto_cuota' => 20000,
-                'estado_pago' => 'pendiente',
-                'fecha_pago' => null,
-                'fecha_vencimiento' => Carbon::now()->subDays(10), // Vencida
-                'observaciones' => 'Debe pagar',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'alumno_plan_id' => 1,
-                'nro_cuota' => 2,
-                'monto_cuota' => 20000,
-                'estado_pago' => 'pendiente',
-                'fecha_pago' => null,
-                'fecha_vencimiento' => Carbon::now()->addDays(10), // No vencida
-                'observaciones' => 'Debe pagar',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'alumno_plan_id' => 1,
-                'nro_cuota' => 3,
-                'monto_cuota' => 20000,
                 'estado_pago' => 'pagado',
-                'fecha_pago' => Carbon::now()->subDays(5),
-                'fecha_vencimiento' => Carbon::now()->subDays(2),
+                'fecha_pago' => Carbon::now()->subDays(10),
+                'fecha_vencimiento' => Carbon::now()->subDays(5),
                 'observaciones' => 'Pagado en efectivo',
                 'created_at' => now(),
                 'updated_at' => now(),

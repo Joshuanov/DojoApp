@@ -4,16 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Mensualidad;
 use App\Models\AlumnoPlan;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use App\Models\Alumno;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class MensualidadController extends Controller
 {
     public function index()
     {
-        $mensualidades = Mensualidad::with('alumnoPlan')->orderByDesc('fecha_vencimiento')->paginate(10);
-        return view('mensualidades.index', compact('mensualidades'));
+        /*  $mensualidades = Mensualidad::with('alumnoPlan')->orderByDesc('fecha_vencimiento')->paginate(10);
+        return view('mensualidades.index', compact('mensualidades')); */
+        $alumnosConContrato = Alumno::whereHas('alumnoPlan.plan')
+            ->with(['alumnoPlan.plan', 'mensualidades'])
+             ->paginate(10);
+
+        // Trae mensualidades asociadas a esos alumnos
+        $mensualidades = Mensualidad::with(['alumnoPlan.alumno', 'alumnoPlan.plan'])
+            ->whereIn('alumno_plan_id', $alumnosConContrato->pluck('alumnoPlan.id'))
+            ->get();
+
+        return view('mensualidades.index', compact('alumnosConContrato', 'mensualidades'));
     }
 
     public function create()
@@ -106,5 +117,31 @@ class MensualidadController extends Controller
         $mensualidad->delete();
 
         return redirect()->route('mensualidades.index')->with('success', 'Mensualidad eliminada correctamente.');
+    }
+
+    public function pagar(Request $request)
+    {
+        $request->validate([
+            'alumno_id' => 'required|exists:alumnos,id',
+            'cuotas' => 'required|array',
+            'cuotas.*' => 'exists:mensualidades,id'
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Actualiza las cuotas seleccionadas
+            Mensualidad::whereIn('id', $request->cuotas)
+                ->update([
+                    'estado_pago' => 'Pagado',
+                    'fecha_pago' => now()
+                ]);
+
+            DB::commit();
+            return redirect()->route('mensualidades.index')->with('success', 'Pago registrado correctamente.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return redirect()->route('mensualidades.index')->with('error', 'Error al registrar el pago: ' . $e->getMessage());
+        }
     }
 }
