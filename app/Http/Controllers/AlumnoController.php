@@ -194,11 +194,17 @@ class AlumnoController extends Controller
     //Filtro de alumnos con cuotas vencidas
     public function alumnosConCuotasVencidas()
     {
+
+        auth()->user()->update(['vencidos_checked_at' => now()]);
+        
         $alumnos = \App\Models\Alumno::whereHas('alumnoPlan.mensualidades', function($query) {
             $query->where('estado_pago', 'vencido'); //Trae alumnos con mensualidades vencidas
         })->with(['alumnoPlan.mensualidades' => function($query) {
             $query->where('estado_pago', 'vencido'); //asegura que solo se traigan las mensualidades vencidas de cada alumno
-        }])->get(); 
+        }])->get();
+        // Actualizar el campo vencidos_checked_at del usuario autenticado
+        // Esto se utiliza para registrar cuándo se revisaron las cuotas vencidas por última vez
+         
 
         return view('alumnos.vencidos', compact('alumnos'));
     }
