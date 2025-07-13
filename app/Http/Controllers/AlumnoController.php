@@ -143,7 +143,8 @@ class AlumnoController extends Controller
 
     public function edit(Alumno $alumno)
     {
-        return view('alumnos.edit', compact('alumno'));
+        $planes = Plan::all();
+        return view('alumnos.edit', compact('alumno', 'planes'));
     }
 
     public function update(Request $request, Alumno $alumno)

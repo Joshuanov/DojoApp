@@ -9,7 +9,7 @@
             <form action="{{ route('alumnos.update', $alumno) }}" method="POST">
                 @csrf
                 @method('PUT')
-                @include('alumnos.partials.form', ['alumno' => $alumno])
+                @include('alumnos.partials.form', ['alumno' => $alumno, 'planes' => $planes])
 
                 <div class="flex items-center gap-3 mt-6 ml-6">
                     <x-primary-button>Actualizar</x-primary-button>
