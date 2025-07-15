@@ -1,0 +1,49 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Asistencia Semanal</h2>
+    </x-slot>
+
+    <div class="py-6 px-4 max-w-7xl mx-auto">
+        <form method="GET" class="mb-4">
+            <input type="text" name="busqueda" value="{{ $busqueda }}" placeholder="Buscar por nombre, grado o grupo" class="border rounded-md px-4 py-2 w-full md:w-1/3">
+            <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Buscar</button>
+        </form>
+
+        <div class="overflow-x-auto" x-data="{ filtro: '' }">
+            <input type="text" x-model="filtro" placeholder="Filtrar resultados..." class="mb-2 border rounded px-2 py-1 w-full md:w-1/4" />
+            <table class="min-w-full bg-white border">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="px-4 py-2 text-left">Alumno</th>
+                        <th class="px-4 py-2 text-left">Grupo</th>
+                        <th class="px-4 py-2 text-left">Total de clases</th>
+                        <th class="px-4 py-2 text-left">Clases Tradicional</th>
+                        <th class="px-4 py-2 text-left">Clases Sanda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($alumnos as $alumno)
+                        @php
+                            $plan = optional($alumno->alumnoPlan)->plan;
+                            $maxTrad = $plan->cant_clases_tradicional ?? 0;
+                            $maxSanda = $plan->cant_clases_sanda ?? 0;
+                            $maxExtra = $plan->cant_clases_extra ?? 0;
+                            $totalMax = $maxTrad + $maxSanda + $maxExtra;
+                            $tradCount = $alumno->asistencias->filter(fn($a) => strtolower(optional($a->tipoClase)->nombre_clase) === 'tradicional')->count();
+                            $sandaCount = $alumno->asistencias->filter(fn($a) => strtolower(optional($a->tipoClase)->nombre_clase) === 'sanda')->count();
+                            $totalCount = $alumno->asistencias->count();
+                            $grupo = $alumno->grupo;
+                        @endphp
+                        <tr x-show="'{{ strtolower($alumno->nombre_alumno.' '.$alumno->apellido_paterno.' '.$alumno->apellido_materno.' '.$alumno->grado.' '.$grupo) }}'.includes(filtro.toLowerCase())">
+                            <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }} {{ $alumno->apellido_materno }}</td>
+                            <td class="border px-4 py-2">{{ $grupo }}</td>
+                            <td class="border px-4 py-2">{{ min($totalCount, $totalMax) }} de {{ $totalMax }}</td>
+                            <td class="border px-4 py-2">{{ min($tradCount, $maxTrad) }} de {{ $maxTrad }}</td>
+                            <td class="border px-4 py-2">{{ min($sandaCount, $maxSanda) }} de {{ $maxSanda }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</x-app-layout>

@@ -39,7 +39,16 @@
             <x-text-input type="text" name="contacto" :value="old('contacto', $alumno->contacto ?? '')" />
         </div>
 
-
+        <!--GRUPO-->
+        <div>
+            <x-select name="grupo" label="Grupo" :options="[
+                '' => 'Selecciona un grupo',
+                'Tiger' => 'Tiger',
+                'Junior' => 'Junior',
+                'Adulto' => 'Adulto'
+            ]" :selected="old('grupo', $alumno->grupo ?? '')" />
+        </div>
+        
         <!--LISTA NIVELES-->
          <div>
             <x-select name="nivel" label="Nivel" :options="[

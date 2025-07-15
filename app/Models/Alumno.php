@@ -25,6 +25,7 @@ class Alumno extends Model
         'apellido_materno',
         'edad',
         'rut',
+        'grupo',
         'nivel',
         'grado',
         'estado',

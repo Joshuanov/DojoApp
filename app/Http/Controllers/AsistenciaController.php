@@ -137,4 +137,35 @@ class AsistenciaController extends Controller
 
         return redirect()->route('asistencias.index')->with('success', 'Asistencias masivas registradas correctamente.');
     }
+
+    
+    // Muestra un listado de alumnos con el resumen de asistencia de la semana actual.
+     
+    public function listadoAlumnos(Request $request)
+    {
+        $inicioSemana = now()->startOfWeek();
+        $finSemana = now()->endOfWeek();
+
+        $alumnos = Alumno::with(['alumnoPlan.plan', 'asistencias' => function ($q) use ($inicioSemana, $finSemana) {
+            $q->whereBetween('fecha', [$inicioSemana, $finSemana])
+                ->where('estado', 'presente')
+                ->with('tipoClase');
+        }])
+            ->when($request->busqueda, function ($query) use ($request) {
+                $busqueda = $request->busqueda;
+                $query->where(function ($q) use ($busqueda) {
+                    $q->where('nombre_alumno', 'like', "%$busqueda%")
+                        ->orWhere('apellido_paterno', 'like', "%$busqueda%")
+                        ->orWhere('apellido_materno', 'like', "%$busqueda%")
+                        ->orWhere('grado', 'like', "%$busqueda%")
+                        ->orWhere('grupo', 'like', "%$busqueda%");
+                });
+            })
+            ->get();
+
+        return view('asistencias.listado_alumnos', [
+            'alumnos' => $alumnos,
+            'busqueda' => $request->busqueda,
+        ]);
+    }
 }

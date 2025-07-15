@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
                 'apellido_materno' => 'Gómez',
                 'edad' => 15,
                 'rut' => '12345678-9',
+                'grupo' => 'Tiger',
                 'nivel' => 'Intermedio',
                 'grado' => 'Rojo',
                 'estado' => 'activo',

@@ -36,6 +36,7 @@ class DashboardNotificationTest extends TestCase
             'edad' => 20,
             'rut' => '12345678-9',
             'nivel' => 'basico',
+            'grupo' => 'Tiger',
             'grado' => 'amarillo',
             'estado' => 'activo',
             'contacto' => '123456789',

@@ -18,7 +18,8 @@ class DashboardController extends Controller
         $user = Auth::user();
         // Si el usuario no tiene una fecha de revisión, se usa la fecha de creación
         $lastCheck = $user->vencidos_checked_at ?? $user->created_at;
-
+        
+        //
         $nuevasCuotas = Mensualidad::where('estado_pago', 'vencido')
             ->where('fecha_vencimiento', '>=', $lastCheck)
             ->count();

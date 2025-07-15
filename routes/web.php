@@ -41,6 +41,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/asistencias/masiva', [AsistenciaController::class, 'vistaMasiva'])->name('asistencias.masiva');
     Route::post('/asistencias/masiva', [AsistenciaController::class, 'guardarMasiva'])->name('asistencias.masiva.store');
 
+    // Listado semanal de asistencia por alumno
+    Route::get('/asistencia', [AsistenciaController::class, 'listadoAlumnos'])->name('asistencia.listado');
+
     Route::resource('alumnos', AlumnoController::class);
     Route::resource('planes', PlanController::class)->parameters(['planes' => 'plan']);
     Route::resource('alumno_plan', AlumnoPlanController::class);
