@@ -34,16 +34,68 @@
                             $totalCount = $alumno->asistencias->count();
                             $grupo = $alumno->grupo;
                         @endphp
-                        <tr x-show="'{{ strtolower($alumno->nombre_alumno.' '.$alumno->apellido_paterno.' '.$alumno->apellido_materno.' '.$alumno->grado.' '.$grupo) }}'.includes(filtro.toLowerCase())">
-                            <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }} {{ $alumno->apellido_materno }}</td>
+                        <tr x-data="asistenciaRow({{ $alumno->id }}, {{ min($tradCount, $maxTrad) }}, {{ min($sandaCount, $maxSanda) }}, {{ min($totalCount, $totalMax) }}, {{ $maxTrad }}, {{ $maxSanda }}, {{ $totalMax }})"
+                            x-show="'{{ strtolower($alumno->nombre_alumno.' '.$alumno->apellido_paterno.' '.$alumno->apellido_materno.' '.$alumno->grado.' '.$grupo) }}'.includes(filtro.toLowerCase())">                            <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }} {{ $alumno->apellido_materno }}</td>
                             <td class="border px-4 py-2">{{ $grupo }}</td>
-                            <td class="border px-4 py-2">{{ min($totalCount, $totalMax) }} de {{ $totalMax }}</td>
-                            <td class="border px-4 py-2">{{ min($tradCount, $maxTrad) }} de {{ $maxTrad }}</td>
-                            <td class="border px-4 py-2">{{ min($sandaCount, $maxSanda) }} de {{ $maxSanda }}</td>
+                            <td class="border px-4 py-2"><span x-text="total"></span> de {{ $totalMax }}</td>
+                            <td class="border px-4 py-2">
+                                <span x-text="trad"></span> de {{ $maxTrad }}
+                                <button x-show="trad < maxTrad" @click="increment('tradicional')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
+                            </td>
+                            <td class="border px-4 py-2">
+                                <span x-text="sanda"></span> de {{ $maxSanda }}
+                                <button x-show="sanda < maxSanda" @click="increment('sanda')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            window.asistenciaRow = function (alumnoId, trad, sanda, total, maxTrad, maxSanda, totalMax) {
+                return {
+                    trad,
+                    sanda,
+                    total,
+                    maxTrad,
+                    maxSanda,
+                    totalMax,
+                    async increment(tipo) {
+                        try {
+                            const response = await fetch('{{ route('asistencia.increment') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({ alumno_id: alumnoId, tipo })
+                            });
+
+                            if (!response.ok) {
+                                console.error('Increment failed', response.status);
+                                return;
+                            }
+
+                            if (tipo === 'tradicional') {
+                                this.trad++;
+                            } else {
+                                this.sanda++;
+                            }
+
+                            if (this.total < this.totalMax) {
+                                this.total++;
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                };
+            }
+        });
+    </script>
 </x-app-layout>

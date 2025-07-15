@@ -168,4 +168,28 @@ class AsistenciaController extends Controller
             'busqueda' => $request->busqueda,
         ]);
     }
+    
+    public function increment(Request $request)
+    {
+        $request->validate([
+            'alumno_id' => 'required|exists:alumnos,id',
+            'tipo' => 'required|in:tradicional,sanda',
+        ]);
+
+        $tipoClase = TipoClase::whereRaw('lower(nombre_clase) = ?', [$request->tipo])->first();
+
+        if (!$tipoClase) {
+            return response()->json(['error' => 'Tipo de clase no encontrado'], 404);
+        }
+
+        Asistencia::create([
+            'alumno_id' => $request->alumno_id,
+            'fecha' => now(),
+            'tipo_clase_id' => $tipoClase->id,
+            'estado' => 'presente',
+            'es_recuperacion' => false,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
 }

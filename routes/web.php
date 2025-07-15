@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
 
     // Listado semanal de asistencia por alumno
     Route::get('/asistencia', [AsistenciaController::class, 'listadoAlumnos'])->name('asistencia.listado');
+    Route::post('/asistencia/increment', [AsistenciaController::class, 'increment'])->name('asistencia.increment');
 
     Route::resource('alumnos', AlumnoController::class);
     Route::resource('planes', PlanController::class)->parameters(['planes' => 'plan']);
