@@ -54,7 +54,7 @@
     </div>
 
     <script>
-        document.addEventListener('alpine:init', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             window.asistenciaRow = function (alumnoId, trad, sanda, total, maxTrad, maxSanda, totalMax) {
                 return {
                     trad,
