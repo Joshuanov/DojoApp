@@ -40,11 +40,11 @@
                             <td class="border px-4 py-2"><span x-text="total"></span> de {{ $totalMax }}</td>
                             <td class="border px-4 py-2">
                                 <span x-text="trad"></span> de {{ $maxTrad }}
-                                <button x-show="trad < maxTrad" @click="increment('tradicional')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
+                                <button x-show="trad < maxTrad && total < totalMax" @click="increment('tradicional')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
                             </td>
                             <td class="border px-4 py-2">
                                 <span x-text="sanda"></span> de {{ $maxSanda }}
-                                <button x-show="sanda < maxSanda" @click="increment('sanda')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
+                                <button x-show="sanda < maxSanda && total < totalMax" @click="increment('sanda')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
                             </td>
                         </tr>
                     @endforeach
@@ -54,7 +54,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('alpine:init', () => {
             window.asistenciaRow = function (alumnoId, trad, sanda, total, maxTrad, maxSanda, totalMax) {
                 return {
                     trad,
@@ -64,6 +64,10 @@
                     maxSanda,
                     totalMax,
                     async increment(tipo) {
+                        if (this.total >= this.totalMax) return;
+                        if (tipo === 'tradicional' && this.trad >= this.maxTrad) return;
+                        if (tipo === 'sanda' && this.sanda >= this.maxSanda) return;
+
                         try {
                             const response = await fetch('{{ route('asistencia.increment') }}', {
                                 method: 'POST',
