@@ -182,6 +182,7 @@ class AsistenciaController extends Controller
             return response()->json(['error' => 'Tipo de clase no encontrado'], 404);
         }
 
+        // Verificar si ya existe una asistencia para el alumno en la fecha actual
         Asistencia::create([
             'alumno_id' => $request->alumno_id,
             'fecha' => now(),
@@ -190,6 +191,24 @@ class AsistenciaController extends Controller
             'es_recuperacion' => false,
         ]);
 
-        return response()->json(['success' => true]);
+        $inicioSemana = now()->startOfWeek();
+        $finSemana = now()->endOfWeek();
+
+        $asistenciasSemana = Asistencia::where('alumno_id', $request->alumno_id)
+            ->whereBetween('fecha', [$inicioSemana, $finSemana])
+            ->where('estado', 'presente')
+            ->with('tipoClase')
+            ->get();
+
+        $trad = $asistenciasSemana->filter(fn($a) => strtolower(optional($a->tipoClase)->nombre_clase) === 'tradicional')->count();
+        $sanda = $asistenciasSemana->filter(fn($a) => strtolower(optional($a->tipoClase)->nombre_clase) === 'sanda')->count();
+        $total = $asistenciasSemana->count();
+
+        return response()->json([
+            'success' => true,
+            'trad' => $trad,
+            'sanda' => $sanda,
+            'total' => $total,
+        ]);
     }
 }

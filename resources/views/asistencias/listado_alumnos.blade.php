@@ -85,14 +85,24 @@
                                 return;
                             }
 
-                            if (tipo === 'tradicional') {
-                                this.trad++;
-                            } else {
-                                this.sanda++;
-                            }
+                            const data = await response.json().catch(() => null);
 
-                            if (this.total < this.totalMax) {
-                                this.total++;
+                            if (data && data.success) {
+                                this.trad = data.trad;
+                                this.sanda = data.sanda;
+                                this.total = data.total;
+                                } else {
+                                if (tipo === 'tradicional' && this.trad < this.maxTrad) {
+                                    this.trad++;
+                                }
+
+                                if (tipo === 'sanda' && this.sanda < this.maxSanda) {
+                                    this.sanda++;
+                                }
+
+                                if (this.total < this.totalMax) {
+                                    this.total++;
+                                }
                             }
                         } catch (e) {
                             console.error(e);
