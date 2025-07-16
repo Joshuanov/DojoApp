@@ -9,7 +9,7 @@
             <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Buscar</button>
         </form>
 
-        <div class="overflow-x-auto" x-data="{ filtro: '' }">
+       <div class="overflow-x-auto" x-data="asistenciaTable()" @cambio.window="registrarCambio($event)">
             <input type="text" x-model="filtro" placeholder="Filtrar resultados..." class="mb-2 border rounded px-2 py-1 w-full md:w-1/4" />
             <table class="min-w-full bg-white border">
                 <thead>
@@ -41,20 +41,63 @@
                             <td class="border px-4 py-2">
                                 <span x-text="trad"></span> de {{ $maxTrad }}
                                 <button x-show="trad < maxTrad && total < totalMax" @click="increment('tradicional')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
+                                <button x-show="trad > 0" @click="decrement('tradicional')" type="button" class="ml-2 bg-red-500 text-white px-2 py-1 rounded">-</button>
                             </td>
                             <td class="border px-4 py-2">
                                 <span x-text="sanda"></span> de {{ $maxSanda }}
                                 <button x-show="sanda < maxSanda && total < totalMax" @click="increment('sanda')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
+                            <button x-show="sanda > 0" @click="decrement('sanda')" type="button" class="ml-2 bg-red-500 text-white px-2 py-1 rounded">-</button>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+            <button @click="guardar" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded" type="button">Guardar asistencias</button>
         </div>
     </div>
 
     <script>
         document.addEventListener('alpine:init', () => {
+            window.asistenciaTable = function () {
+                return {
+                    filtro: '',
+                    cambios: {},
+                    registrarCambio(event) {
+                        const { alumnoId, tipo, delta } = event.detail;
+                        if (!this.cambios[alumnoId]) {
+                            this.cambios[alumnoId] = { trad: 0, sanda: 0 };
+                        }
+                        this.cambios[alumnoId][tipo] += delta;
+                    },
+                    async guardar() {
+                        const payload = Object.entries(this.cambios).map(([id, cambios]) => ({
+                            alumno_id: id,
+                            trad: cambios.trad,
+                            sanda: cambios.sanda
+                        }));
+                        if (payload.length === 0) return;
+                        try {
+                            const response = await fetch('{{ route('asistencia.guardar') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                },
+                                body: JSON.stringify({ cambios: payload })
+                            });
+                            if (response.ok) {
+                                this.cambios = {};
+                                alert('Asistencias guardadas correctamente');
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                };
+                };
+
             window.asistenciaRow = function (alumnoId, trad, sanda, total, maxTrad, maxSanda, totalMax) {
                 return {
                     trad,
@@ -63,49 +106,31 @@
                     maxTrad,
                     maxSanda,
                     totalMax,
-                    async increment(tipo) {
+                    increment(tipo) {
                         if (this.total >= this.totalMax) return;
                         if (tipo === 'tradicional' && this.trad >= this.maxTrad) return;
                         if (tipo === 'sanda' && this.sanda >= this.maxSanda) return;
+                        if (!confirm(`¿Confirmas que el alumno asistió a clase ${tipo === 'tradicional' ? 'Tradicional' : 'Sanda'} hoy?`)) return;
 
-                        try {
-                            const response = await fetch('{{ route('asistencia.increment') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Accept': 'application/json',
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                },
-                                body: JSON.stringify({ alumno_id: alumnoId, tipo })
-                            });
-
-                            if (!response.ok) {
-                                console.error('Increment failed', response.status);
-                                return;
-                            }
-
-                            const data = await response.json().catch(() => null);
-
-                            if (data && data.success) {
-                                this.trad = data.trad;
-                                this.sanda = data.sanda;
-                                this.total = data.total;
-                                } else {
-                                if (tipo === 'tradicional' && this.trad < this.maxTrad) {
-                                    this.trad++;
-                                }
-
-                                if (tipo === 'sanda' && this.sanda < this.maxSanda) {
-                                    this.sanda++;
-                                }
-
-                                if (this.total < this.totalMax) {
-                                    this.total++;
-                                }
-                            }
-                        } catch (e) {
-                            console.error(e);
+                        if (tipo === 'tradicional') {
+                            this.trad++;
+                            this.$dispatch('cambio', { alumnoId, tipo: 'trad', delta: 1 });
+                        } else {
+                            this.sanda++;
+                            this.$dispatch('cambio', { alumnoId, tipo: 'sanda', delta: 1 });
+                        }
+                        this.total++;
+                    },
+                    decrement(tipo) {
+                        if (tipo === 'tradicional' && this.trad > 0 && confirm('¿Confirmas revertir asistencia Tradicional?')) {
+                            this.trad--;
+                            this.total--;
+                            this.$dispatch('cambio', { alumnoId, tipo: 'trad', delta: -1 });
+                        }
+                        if (tipo === 'sanda' && this.sanda > 0 && confirm('¿Confirmas revertir asistencia Sanda?')) {
+                            this.sanda--;
+                            this.total--;
+                            this.$dispatch('cambio', { alumnoId, tipo: 'sanda', delta: -1 });
                         }
                     }
                 };

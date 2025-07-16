@@ -211,4 +211,56 @@ class AsistenciaController extends Controller
             'total' => $total,
         ]);
     }
+
+    public function guardarCambios(Request $request)
+    {
+        $data = $request->validate([
+            'cambios' => 'required|array',
+            'cambios.*.alumno_id' => 'required|exists:alumnos,id',
+            'cambios.*.trad' => 'integer',
+            'cambios.*.sanda' => 'integer',
+        ]);
+
+        foreach ($data['cambios'] as $cambio) {
+            $alumnoId = $cambio['alumno_id'];
+            $tipos = ['trad' => 'tradicional', 'sanda' => 'sanda'];
+            foreach ($tipos as $key => $nombre) {
+                $delta = $cambio[$key] ?? 0;
+                if ($delta == 0) {
+                    continue;
+                }
+
+                $tipoClase = TipoClase::whereRaw('lower(nombre_clase) = ?', [$nombre])->first();
+                if (!$tipoClase) {
+                    continue;
+                }
+
+                if ($delta > 0) {
+                    for ($i = 0; $i < $delta; $i++) {
+                        Asistencia::create([
+                            'alumno_id' => $alumnoId,
+                            'fecha' => now(),
+                            'tipo_clase_id' => $tipoClase->id,
+                            'estado' => 'presente',
+                            'es_recuperacion' => false,
+                        ]);
+                    }
+                } else {
+                    for ($i = 0; $i < abs($delta); $i++) {
+                        $asistencia = Asistencia::where('alumno_id', $alumnoId)
+                            ->where('tipo_clase_id', $tipoClase->id)
+                            ->whereBetween('fecha', [now()->startOfWeek(), now()->endOfWeek()])
+                            ->latest()
+                            ->first();
+                        if ($asistencia) {
+                            $asistencia->delete();
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json(['success' => true]);
+    }
 }
+
