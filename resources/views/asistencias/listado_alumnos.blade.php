@@ -37,7 +37,10 @@
                         <tr x-data="asistenciaRow({{ $alumno->id }}, {{ min($tradCount, $maxTrad) }}, {{ min($sandaCount, $maxSanda) }}, {{ min($totalCount, $totalMax) }}, {{ $maxTrad }}, {{ $maxSanda }}, {{ $totalMax }})"
                             x-show="'{{ strtolower($alumno->nombre_alumno.' '.$alumno->apellido_paterno.' '.$alumno->apellido_materno.' '.$alumno->grado.' '.$grupo) }}'.includes(filtro.toLowerCase())">                            <td class="border px-4 py-2">{{ $alumno->nombre_alumno }} {{ $alumno->apellido_paterno }} {{ $alumno->apellido_materno }}</td>
                             <td class="border px-4 py-2">{{ $grupo }}</td>
-                            <td class="border px-4 py-2"><span x-text="total"></span> de {{ $totalMax }}</td>
+                            <td class="border px-4 py-2">
+                                <span x-text="total"></span> de {{ $totalMax }}
+                                <span x-show="total >= totalMax" class="ml-2 text-xs font-semibold text-red-600">Cupo semanal alcanzado</span>
+                            </td>
                             <td class="border px-4 py-2">
                                 <span x-text="trad"></span> de {{ $maxTrad }}
                                 <button x-show="trad < maxTrad && total < totalMax" @click="increment('tradicional')" type="button" class="ml-2 bg-green-500 text-white px-2 py-1 rounded">+</button>
