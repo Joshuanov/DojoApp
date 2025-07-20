@@ -48,9 +48,9 @@
                         <tr class="border-t">
                             <td class="px-4 py-2">{{ $plan->nombre_plan }}</td>
                             <td class="px-4 py-2">{{ $plan->duracion_meses }}</td>
-                            <td class="px-4 py-2">{{ $plan->monto_total }}</td>
-                            <td class="px-4 py-2">{{ $plan->monto_base_mensual }}</td>
-                            <td class="px-4 py-2">{{ $plan->pago_inicial }}</td>
+                            <td class="px-4 py-2 text-right">${{ number_format($plan->monto_total, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2 text-right">${{ number_format($plan->monto_base_mensual, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2 text-right">${{ number_format($plan->pago_inicial, 0, ',', '.') }}</td>
                             <td class="px-4 py-2">{{ $plan->tipo_plan_pago }}</td>
                             <td class="px-4 py-2">{{ $plan->cant_clases_tradicional }}</td>
                             <td class="px-4 py-2">{{ $plan->cant_clases_sanda }}</td>

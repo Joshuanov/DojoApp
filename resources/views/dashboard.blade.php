@@ -17,17 +17,15 @@
             </a>
 
             <!-- Módulo Cuotas Vencidas -->
-             <!-- badge con alpine.js -->
-            <div x-data="{ nuevas: {{ $nuevasCuotas ?? 0 }} }"> 
-                <a href="{{ route('alumnos.vencidos') }}"
-                    class="relative block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                    <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Alumnos con cuotas vencidas</h5>
-                    <p class="text-gray-700 dark:text-gray-400">Ver cuotas pendientes que han vencido</p>
-                    <template x-if="nuevas > 0">
-                        <span class="absolute top-2 right-2 z-10 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full" x-text="nuevas"></span>
-                    </template>
-                </a>
-            </div>
+            <a href="{{ route('alumnos.vencidos') }}"
+                x-data="{ nuevas: {{ $nuevasCuotas ?? 0 }} }"
+                class="relative block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-xl font-bold text-gray-900 dark:text-white">Alumnos con cuotas vencidas</h5>
+                <p class="text-gray-700 dark:text-gray-400">Ver cuotas pendientes que han vencido</p>
+                <template x-if="nuevas > 0">
+                    <span class="absolute top-2 right-2 z-10 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full" x-text="nuevas"></span>
+                </template>
+            </a>
 
             <!-- Módulo Mensualidades -->
             <a href="{{ route('mensualidades.index') }}"

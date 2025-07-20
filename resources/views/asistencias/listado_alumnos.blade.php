@@ -55,7 +55,7 @@
                     @endforeach
                 </tbody>
             </table>
-            <button @click="guardar" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded" type="button">Guardar asistencias</button>
+            <!-- <button @click="guardar" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded" type="button">Guardar asistencias</button> -->
         </div>
     </div>
 

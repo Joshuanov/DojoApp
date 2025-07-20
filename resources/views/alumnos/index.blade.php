@@ -45,7 +45,7 @@
                         <td class="border px-4 py-2">
                             @if($alumno->alumnoPlan && $alumno->alumnoPlan->plan)
 
-                                <a href="{{ route('alumnos.contrato', $alumno->id) }}" class="text-blue-600 hover:underline">Ver Contrato aquí |
+                                <a href="{{ route('alumnos.contrato', $alumno->id) }}" class="text-blue-600 hover:underline font-semibold">Ver Contrato aquí |
                                     {{ $alumno->alumnoPlan->plan->nombre_plan }}
                                 </a>
                             @else
@@ -55,16 +55,18 @@
                         <td class="border px-4 py-2">{{ $alumno->nivel_nombre }}</td>
                         <td class="border px-4 py-2">{{ $alumno->grado_nombre }}</td>
                         <td class="border px-4 py-2">{{ $alumno->estado_nombre}}</td>
-                        <td class="px-4 py-2 flex space-x-2">
-                            <a href="{{ route('alumnos.edit', $alumno) }}">
-                                <x-secondary-button>Editar</x-secondary-button>
-                            </a>
-                            <form action="{{ route('alumnos.destroy', $alumno) }}" method="POST"
-                                onsubmit="return confirm('¿Eliminar alumno?');">
-                                @csrf
-                                @method('DELETE')
-                                <x-danger-button>Eliminar</x-danger-button>
-                            </form>
+                        <td class="border px-4 py-2">
+                            <div class="flex justify-center items-center space-x-2">
+                                <a href="{{ route('alumnos.edit', $alumno) }}">
+                                    <x-secondary-button>Editar</x-secondary-button>
+                                </a>
+                                <form action="{{ route('alumnos.destroy', $alumno) }}" method="POST"
+                                    onsubmit="return confirm('¿Eliminar alumno?');" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-danger-button>Eliminar</x-danger-button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
 

@@ -19,19 +19,20 @@
                 </div>
             @endif
 
-            <div class="flex justify-end mb-4">
+            
+            <!-- <div class="flex justify-end mb-4">
                 <a href="{{ route('mensualidades.create') }}"
                     class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                     + Nueva Mensualidad
                 </a>
-            </div>
+            </div> -->
 
             <div class="overflow-x-auto bg-white rounded shadow border">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-100 text-sm text-gray-700">
                         <tr>
-                            <th class="px-4 py-2 text-left">Alumno</th>
-                            <th class="px-4 py-2 text-left">Plan</th>
+                            <th class="px-4 py-2">Alumno</th>
+                            <th class="px-4 py-2">Plan</th>
                             <th class="px-4 py-2">Cuota</th>
                             {{-- <th class="px-4 py-2">Monto</th> --}}
                             {{-- <th class="px-4 py-2">Estado</th> --}}
@@ -82,7 +83,7 @@
 
                         @forelse ($alumnosConContrato as $alumno)
                             <tr class="border-b">
-                                <td class="px-4 py-2 font-semibold">{{ $alumno->nombre_alumno }}
+                                <td class="px-4 py-2 font-semibold text-center">{{ $alumno->nombre_alumno }}
                                     {{ $alumno->apellido_paterno }} {{ $alumno->apellido_materno }}</td>
 
                                 <td class="px-4 py-2 text-center">
@@ -96,15 +97,15 @@
                                 </td>
 
                                 <td class="px-4 py-2 text-center space-x-2">
-                                    <a href="{{ route('mensualidades.edit', $alumno->id) }}"
-                                        class="px-2 py-1 text-sm bg-blue-500 text-white rounded">Editar</a>
-                                    <form action="{{ route('mensualidades.destroy', $alumno->id) }}" method="POST"
+                                    <!-- <a href="{{ route('mensualidades.edit', $alumno->id) }}"
+                                        class="px-2 py-1 text-sm bg-blue-500 text-white rounded">Editar</a> -->
+                                    <!-- <form action="{{ route('mensualidades.destroy', $alumno->id) }}" method="POST"
                                         class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-2 py-1 text-sm bg-red-500 text-white rounded"
                                             onclick="return confirm('¿Seguro?')">Eliminar</button>
-                                    </form>
+                                    </form> -->
 
                                     <!-- Botón para abrir modal -->
                                     <button @click="openModal({{ $alumno->id }})"

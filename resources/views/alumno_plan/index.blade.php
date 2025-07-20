@@ -12,11 +12,11 @@
             </div>
         @endif
 
-        <div class="mb-4">
+        <!-- <div class="mb-4">
             <a href="{{ route('alumno_plan.create') }}">
                 <x-primary-button>Asignar Nuevo Plan</x-primary-button>
             </a>
-        </div>
+        </div> -->
 
         <form method="GET" class="mb-4">
             <input type="text" name="busqueda" value="{{ request('busqueda') }}"
@@ -43,25 +43,25 @@
                         <th class="px-4 py-2 border">Observaciones</th>
                         <th class="px-4 py-2 border">Meses Congelados</th>
                         <th class="px-4 py-2 border">Fecha Fin</th>
-                        <th class="px-4 py-2 border">Acciones</th>
+                        <!-- <th class="px-4 py-2 border">Acciones</th> -->
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($alumnosPlanes as $item)
                         <tr>
-                            <td class="px-4 py-2 border">{{ $item->alumno->nombre_alumno }}
+                            <td class="px-4 py-2 border text-center">{{ $item->alumno->nombre_alumno }}
                                 {{ $item->alumno->apellido_paterno }} {{ $item->alumno->apellido_materno }}</td>
-                            <td class="px-4 py-2 border">{{ $item->plan->nombre_plan }}</td>
-                            <td class="px-4 py-2 border">{{ $item->fecha_inicio }}</td>
-                            <td class="px-4 py-2 border">{{ $item->duracion_meses }}</td>
-                            <td class="px-4 py-2 border">{{ $item->estado }}</td>
-                            <td class="px-4 py-2 border">{{ $item->num_cuotas }}</td>
-                            <td class="px-4 py-2 border">{{ $item->monto_cuota }}</td>
-                            <td class="px-4 py-2 border">{{ $item->pago_inicial }}</td>
-                            <td class="px-4 py-2 border">{{ $item->observaciones }}</td>
-                            <td class="px-4 py-2 border">{{ $item->meses_congelados }}</td>
-                            <td class="px-4 py-2 border">{{ $item->fecha_fin_real }}</td>
-                            <td class="px-4 py-2 border flex gap-2">
+                            <td class="px-4 py-2 border text-center">{{ $item->plan->nombre_plan }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->fecha_inicio }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->duracion_meses }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->estado }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->num_cuotas }}</td>
+                            <td class="px-4 py-2 border text-center">${{ number_format($item->monto_cuota, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2 border text-center">${{ number_format($item->pago_inicial, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->observaciones }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->meses_congelados }}</td>
+                            <td class="px-4 py-2 border text-center">{{ $item->fecha_fin_real }}</td>
+                            <!-- <td class="px-4 py-2 border flex gap-2">
                                 <a href="{{ route('alumno_plan.edit', $item) }}">
                                     <x-secondary-button>Editar</x-secondary-button>
                                 </a>
@@ -71,7 +71,7 @@
                                     @method('DELETE')
                                     <x-danger-button>Eliminar</x-danger-button>
                                 </form>
-                            </td>
+                            </td> -->
                         </tr>
                     @endforeach
                 </tbody>
